@@ -15,27 +15,27 @@ import java.util.List;
 @Data
 @SuperBuilder
 public class ResponseMemberListDto extends ResponseListDto {
-    private List<MemberListItem> memberItems;
+    private List<MemberListItem> memItems;
 
     @Data
     @SuperBuilder
     public static class MemberListItem {
-        private String memberId;
+        private String memId;
 
-        private String memberPw;
+        private String memPw;
 
-        private String memberName;
+        private String memName;
 
-        private String memberAddress1;
+        private String memAddress1;
 
-        private String memberAddress2;
+        private String memAddress2;
 
-        private String memberNumber;
+        private String memNumber;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-        private LocalDate memberBirthday;
+        private LocalDate memBirthday;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime memberRegDate;
+        private LocalDateTime memRegDate;
     }
 }

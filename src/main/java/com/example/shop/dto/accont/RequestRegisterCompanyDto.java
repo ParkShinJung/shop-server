@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestRegisterCompanyDto {
-    private String companyId;
-    private String companyPw;
-    private String companyName;
-    private String companyCeo;
-    private String companyNumber;
-    private String companyAddress1;
-    private String companyAddress2;
-    private String companyEmail;
+    private String comId;
+    private String comPw;
+    private String comName;
+    private String comCeo;
+    private String comNumber;
+    private String comAddress1;
+    private String comAddress2;
+    private String comEmail;
 }

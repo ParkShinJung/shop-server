@@ -1,13 +1,13 @@
-package com.example.shop.domain.product;
+package com.example.shop.domain.info;
 
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,46 +17,38 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Product {
+public class Notice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prod_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "not_id")
     @GenericGenerator(
-            name = "prod_id",
+            name = "not_id",
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Prod"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Not"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
             })
-    @Column
-    private String prodId;
 
     @Column
-    private String prodTitle;
+    private String notId;
 
     @Column
-    private String prodSubtitle;
+    private String notWriter;
 
     @Column
-    private Integer prodPrice;
+    private String notPw;
 
     @Column
-    private Integer prodStock;
+    private String notTitle;
 
     @Column
-    private Integer prodCount;
+    private String notContent;
+
+    @Column
+    private String notFile;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime prodRegDate;
-
-    @Column
-    private Integer prodWeight;
-
-    @Column
-    private String prodMainImg;
-
-    @Column
-    private String prodSubImg;
+    private LocalDateTime notRegDate;
 }

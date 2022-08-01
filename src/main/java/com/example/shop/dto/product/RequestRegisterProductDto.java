@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestRegisterProductDto {
-    private String productTitle;
-    private String productSubtitle;
-    private Integer productPrice;
-    private Integer productStock;
-    private Integer productCount;
-    private Integer productWeight;
-    private String productMainImg;
-    private String productSubImg;
+    private String prodTitle;
+    private String prodSubtitle;
+    private Integer prodPrice;
+    private Integer prodStock;
+    private Integer prodCount;
+    private Integer prodWeight;
+    private String prodMainImg;
+    private String prodSubImg;
 }

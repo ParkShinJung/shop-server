@@ -20,31 +20,31 @@ public class ResponseProductListDto extends ResponseListDto {
     public static class ProductListItem {
 
 
-        private String productTitle;
+        private String prodTitle;
 
 
-        private String productSubtitle;
+        private String prodSubtitle;
 
 
-        private Integer productPrice;
+        private Integer prodPrice;
 
 
-        private Integer productStock;
+        private Integer prodStock;
 
 
-        private Integer productCount;
+        private Integer prodCount;
 
 
-        private Integer productWeight;
+        private Integer prodWeight;
 
 
-        private String productMainImg;
+        private String prodMainImg;
 
 
-        private String productSubImg;
+        private String prodSubImg;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime productRegDate;
+        private LocalDateTime prodRegDate;
     }
 
 }

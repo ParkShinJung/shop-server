@@ -45,15 +45,15 @@ public class ProductController {
                         .productItems(
                                 productPage.getContent().stream().map(
                                         product -> ResponseProductListDto.ProductListItem.builder()
-                                                .productTitle(product.getProductTitle())
-                                                .productSubtitle(product.getProductSubtitle())
-                                                .productPrice(product.getProductPrice())
-                                                .productStock(product.getProductStock())
-                                                .productCount(product.getProductCount())
-                                                .productWeight(product.getProductWeight())
-                                                .productMainImg(product.getProductMainImg())
-                                                .productSubImg(product.getProductSubImg())
-                                                .productRegDate(product.getProductRegDate())
+                                                .prodTitle(product.getProdTitle())
+                                                .prodSubtitle(product.getProdSubtitle())
+                                                .prodPrice(product.getProdPrice())
+                                                .prodStock(product.getProdStock())
+                                                .prodCount(product.getProdCount())
+                                                .prodWeight(product.getProdWeight())
+                                                .prodMainImg(product.getProdMainImg())
+                                                .prodSubImg(product.getProdSubImg())
+                                                .prodRegDate(product.getProdRegDate())
                                                 .build()
                                 ).collect(Collectors.toList())
                         ).build()
@@ -66,22 +66,22 @@ public class ProductController {
 
         Product savedProduct = productRepository.save(
                 Product.builder()
-                        .productTitle(productDto.getProductTitle())
-                        .productSubtitle(productDto.getProductSubtitle())
-                        .productPrice(productDto.getProductPrice())
-                        .productStock(productDto.getProductStock())
-                        .productCount(productDto.getProductCount())
-                        .productRegDate(LocalDateTime.now())
-                        .productWeight(productDto.getProductWeight())
-                        .productMainImg(productDto.getProductMainImg())
-                        .productSubImg(productDto.getProductSubImg())
+                        .prodTitle(productDto.getProdTitle())
+                        .prodSubtitle(productDto.getProdSubtitle())
+                        .prodPrice(productDto.getProdPrice())
+                        .prodStock(productDto.getProdStock())
+                        .prodCount(productDto.getProdCount())
+                        .prodRegDate(LocalDateTime.now())
+                        .prodWeight(productDto.getProdWeight())
+                        .prodMainImg(productDto.getProdMainImg())
+                        .prodSubImg(productDto.getProdSubImg())
                         .build()
         );
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
         return ResponseEntity.created(selfLink).body(
                 ResponseSavedIdDto.builder()
-                        .savedId(savedProduct.getProductId())
+                        .savedId(savedProduct.getProdId())
                         .build()
         );
     }

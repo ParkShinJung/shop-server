@@ -36,20 +36,20 @@ public class AccountController {
 
         Company savedCompany = companyRepository.save(
                 Company.builder()
-                        .companyId(requestDto.getCompanyId())
-                        .companyPw(requestDto.getCompanyPw())
-                        .companyName(requestDto.getCompanyName())
-                        .companyCeo(requestDto.getCompanyCeo())
-                        .companyNumber(requestDto.getCompanyNumber())
-                        .companyAddress1(requestDto.getCompanyAddress1())
-                        .companyAddress2(requestDto.getCompanyAddress2())
-                        .companyEmail(requestDto.getCompanyEmail())
+                        .comId(requestDto.getComId())
+                        .comPw(requestDto.getComPw())
+                        .comName(requestDto.getComName())
+                        .comCeo(requestDto.getComCeo())
+                        .comNumber(requestDto.getComNumber())
+                        .comAddress1(requestDto.getComAddress1())
+                        .comAddress2(requestDto.getComAddress2())
+                        .comEmail(requestDto.getComEmail())
                         .build());
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(
                 ResponseSavedIdDto.builder()
-                        .savedId(savedCompany.getCompanyId())
+                        .savedId(savedCompany.getComId())
                         .build()
         );
     }
@@ -65,17 +65,17 @@ public class AccountController {
                         .totalCount(memberPage.getTotalElements())
                         .page(memberPage.getNumber())
                         .pageSize(memberPage.getSize())
-                        .memberItems(
+                        .memItems(
                                 memberPage.getContent().stream().map(
                                         member -> ResponseMemberListDto.MemberListItem.builder()
-                                                .memberId(member.getMemberId())
-                                                .memberPw(member.getMemberPw())
-                                                .memberName(member.getMemberName())
-                                                .memberAddress1(member.getMemberAddress1())
-                                                .memberAddress2(member.getMemberAddress2())
-                                                .memberNumber(member.getMemberNumber())
-                                                .memberBirthday(member.getMemberBirthday())
-                                                .memberRegDate(member.getMemberRegDate())
+                                                .memId(member.getMemId())
+                                                .memPw(member.getMemPw())
+                                                .memName(member.getMemName())
+                                                .memAddress1(member.getMemAddress1())
+                                                .memAddress2(member.getMemAddress2())
+                                                .memNumber(member.getMemNumber())
+                                                .memBirthday(member.getMemBirthday())
+                                                .memRegDate(member.getMemRegDate())
                                                 .build()
                                 ).collect(Collectors.toList())
                         )
@@ -88,20 +88,20 @@ public class AccountController {
 
         Member savedMember = memberRepository.save(
                 Member.builder()
-                        .memberId(memberDto.getMemberId())
-                        .memberPw(memberDto.getMemberPw())
-                        .memberName(memberDto.getMemberName())
-                        .memberAddress1(memberDto.getMemberAddress1())
-                        .memberAddress2(memberDto.getMemberAddress2())
-                        .memberNumber(memberDto.getMemberNumber())
-                        .memberRegDate(LocalDateTime.now())
-                        .memberBirthday(LocalDate.parse(memberDto.getMemberBirthday(), DateFormatConst.DATE_FORMAT))
+                        .memId(memberDto.getMemId())
+                        .memPw(memberDto.getMemPw())
+                        .memName(memberDto.getMemName())
+                        .memAddress1(memberDto.getMemAddress1())
+                        .memAddress2(memberDto.getMemAddress2())
+                        .memNumber(memberDto.getMemNumber())
+                        .memRegDate(LocalDateTime.now())
+                        .memBirthday(LocalDate.parse(memberDto.getMemBirthday(), DateFormatConst.DATE_FORMAT))
                         .build());
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(
                 ResponseSavedIdDto.builder()
-                        .savedId(savedMember.getMemberId())
+                        .savedId(savedMember.getMemId())
                         .build()
         );
     }

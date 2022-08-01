@@ -17,26 +17,26 @@ public class Company {
 
     @Id
     @Column
-    private String companyId;
+    private String comId;
 
     @Column
-    private String companyPw;
+    private String comPw;
 
     @Column
-    private String companyName;
+    private String comName;
 
     @Column
-    private String companyCeo;
+    private String comCeo;
 
     @Column
-    private String companyNumber;
+    private String comNumber;
 
     @Column
-    private String companyAddress1;
+    private String comAddress1;
 
     @Column
-    private String companyAddress2;
+    private String comAddress2;
 
     @Column
-    private String companyEmail;
+    private String comEmail;
 }

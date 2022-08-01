@@ -22,28 +22,28 @@ public class Member {
 
     @Id
     @Column
-    private String memberId;
+    private String memId;
 
     @Column
-    private String memberPw;
+    private String memPw;
 
     @Column
-    private String memberName;
+    private String memName;
 
     @Column
-    private String memberAddress1;
+    private String memAddress1;
 
     @Column
-    private String memberAddress2;
+    private String memAddress2;
 
     @Column
-    private String memberNumber;
+    private String memNumber;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime memberRegDate;
+    private LocalDateTime memRegDate;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate memberBirthday;
+    private LocalDate memBirthday;
 }

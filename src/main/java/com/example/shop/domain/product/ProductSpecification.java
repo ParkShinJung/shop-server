@@ -11,9 +11,9 @@ public class ProductSpecification {
 
         if (StringUtils.isNotEmpty(requestProductListDto.getKeyword())) {
             specifications = specifications.and(
-                    (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("productTitle"), "%" + requestProductListDto.getKeyword() + "%")
+                    (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("prodTitle"), "%" + requestProductListDto.getKeyword() + "%")
             ).or(
-                    (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("productSubTitle"), "%" + requestProductListDto.getKeyword() + "%")
+                    (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("prodSubTitle"), "%" + requestProductListDto.getKeyword() + "%")
             );
         }
 

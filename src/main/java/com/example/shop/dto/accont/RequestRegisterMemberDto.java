@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestRegisterMemberDto {
-    private String memberId;
-    private String memberPw;
-    private String memberName;
-    private String memberAddress1;
-    private String memberAddress2;
-    private String memberNumber;
-    private String memberBirthday;
+    private String memId;
+    private String memPw;
+    private String memName;
+    private String memAddress1;
+    private String memAddress2;
+    private String memNumber;
+    private String memBirthday;
 }
