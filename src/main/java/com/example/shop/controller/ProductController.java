@@ -33,7 +33,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<?> getProducts(@Valid RequestProductListDto requestListDto) {
-        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.DESC, "productRegDate");
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.DESC, "prodRegDate");
         Specification<Product> specification = ProductSpecification.getProductListSpecification(requestListDto);
         Page<Product> productPage = productRepository.findAll(specification, pageRequest);
 

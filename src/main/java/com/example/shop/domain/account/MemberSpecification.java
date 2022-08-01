@@ -18,7 +18,7 @@ public class MemberSpecification {
             specifications = specifications.and(
                     (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("memId"), "%" + requestMemberListDto.getKeyword() + "%")
             ).or(
-                    (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("memName"), "%" + requestMemberListDto.getKeyword() + "%")
+                    (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("memberName"), "%" + requestMemberListDto.getKeyword() + "%")
             );
         }
 
