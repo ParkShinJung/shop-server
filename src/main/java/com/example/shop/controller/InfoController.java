@@ -1,12 +1,15 @@
 package com.example.shop.controller;
 
-import com.example.shop.domain.info.Notice;
-import com.example.shop.domain.info.NoticeRepository;
-import com.example.shop.domain.info.NoticeSpecification;
+import com.example.shop.common.consts.ErrorConst;
+import com.example.shop.domain.info.*;
+import com.example.shop.domain.product.Product;
+import com.example.shop.domain.product.ProductRepository;
 import com.example.shop.dto.common.ResponseSavedIdDto;
 import com.example.shop.dto.info.RequestNoticeListDto;
 import com.example.shop.dto.info.RequestRegisterNoticeDto;
+import com.example.shop.dto.info.RequestRegisterQnaDto;
 import com.example.shop.dto.info.ResponseNoticeListDto;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,14 +22,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("info")
 public class InfoController {
 
     private final NoticeRepository noticeRepository;
+
+    private final QnaRepository qnaRepository;
+
+    private final ProductRepository productRepository;
 
     @GetMapping("/notice")
     public ResponseEntity<?> getNotice(@Valid RequestNoticeListDto requestListDto) {
@@ -76,4 +83,31 @@ public class InfoController {
                         .build()
         );
     }
+
+//    @PostMapping("/qna")
+//    public ResponseEntity<?> registerQna(@RequestBody RequestRegisterQnaDto qnaDto) {
+//
+//        Product product = productRepository.findByProdId(qnaDto.getProdId())
+//                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+//
+//        Qna qna = qnaRepository.save(
+//                Qna.builder()
+//                        .product(product)
+//                        .qnaWriter(qnaDto.getQnaWriter())
+//                        .qnaPw(qnaDto.getQnaPw())
+//                        .qnaTitle(qnaDto.getQnaTitle())
+//                        .qnaContent(qnaDto.getQnaContent())
+//                        .qnaFile(qnaDto.getQnaFile())
+//                        .qnaRegDate(LocalDateTime.now())
+//                        .qnaSecret(qnaDto.getQnaSecret())
+//                        .build()
+//        );
+//
+//        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+//        return ResponseEntity.created(selfLink).body(
+//                ResponseSavedIdDto.builder()
+//                        .savedId(qna.getQnaId())
+//                        .build()
+//        );
+//    }
 }

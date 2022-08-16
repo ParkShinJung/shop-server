@@ -7,11 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ProductRepository extends JpaRepository<Product, String> {
-
-    Page<Product> findAll(Specification<Product> specification, Pageable pageable);
-
-    Optional<Product> findByProdId(String prodId);
-
-    Optional<Product> findProductByProdId(String prodId);
+public interface ReviewRepository extends JpaRepository<Review, String> {
+    Page<Review> findAll(Specification<Review> specification, Pageable pageable);
 }

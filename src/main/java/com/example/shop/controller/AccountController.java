@@ -56,7 +56,7 @@ public class AccountController {
 
     @GetMapping("/member")
     public ResponseEntity<?> getMembers(@Valid RequestMemberListDto requestListDto) {
-        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.DESC, "memberRegDate");
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.DESC, "memRegDate");
         Specification<Member> specification = MemberSpecification.getMemberListSpecification(requestListDto);
         Page<Member> memberPage = memberRepository.findAll(specification, pageRequest);
 
@@ -101,7 +101,7 @@ public class AccountController {
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(
                 ResponseSavedIdDto.builder()
-                        .savedId(savedMember.getMemId())
+                        .savedId(savedMember.getId())
                         .build()
         );
     }

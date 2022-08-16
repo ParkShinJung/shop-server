@@ -1,70 +1,65 @@
-package com.example.shop.domain.product;
+package com.example.shop.domain.info;
 
+import com.example.shop.common.type.YesNo;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
-import com.example.shop.domain.info.Notice;
-import com.example.shop.domain.info.Qna;
+import com.example.shop.domain.product.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @ToString
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "product")
-public class Product {
+public class Qna {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prod_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "qna_id")
     @GenericGenerator(
-            name = "prod_id",
+            name = "qna_id",
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Prod"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "qna"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
             })
     @Column
-    private String prodId;
+    private String qnaId;
 
-
-    @Column
-    private String prodTitle;
-
-    @Column
-    private String prodSubtitle;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_id", referencedColumnName = "prodId")
+    @ToString.Exclude
+    private Product product;
 
     @Column
-    private Integer prodPrice;
+    private String qnaWriter;
 
     @Column
-    private Integer prodStock;
+    private String qnaPw;
 
     @Column
-    private Integer prodCount;
+    private String qnaTitle;
+
+    @Column
+    private String qnaContent;
+
+    @Column
+    private String qnaFile;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime prodRegDate;
+    private LocalDateTime qnaRegDate;
 
-    @Column
-    private Integer prodWeight;
-
-    @Column
-    private String prodMainImg;
-
-    @Column
-    private String prodSubImg;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "prodId")
-    private List<Notice> notices;
+    @Column(columnDefinition = "ENUM('Y', 'N') DEFAULT 'Y'")
+    @Enumerated(EnumType.STRING)
+    private YesNo qnaSecret;
 }

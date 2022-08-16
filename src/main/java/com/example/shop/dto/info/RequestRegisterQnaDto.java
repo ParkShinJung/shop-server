@@ -14,7 +14,7 @@ public class RequestRegisterQnaDto {
 
     private String prodId;
     private String qnaWriter;
-    private String qnaQw;
+    private String qnaPw;
     private String qnaTitle;
     private String qnaContent;
     private String qnaFile;

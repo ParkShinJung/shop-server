@@ -1,17 +1,14 @@
 package com.example.shop.domain.product;
 
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
-import com.example.shop.domain.info.Notice;
-import com.example.shop.domain.info.Qna;
+import com.example.shop.domain.account.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @ToString
@@ -20,51 +17,49 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "product")
-public class Product {
+@Table(name = "review")
+public class Review {
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prod_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id")
     @GenericGenerator(
-            name = "prod_id",
+            name = "review_id",
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Prod"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "rev"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
             })
     @Column
-    private String prodId;
+    private String reviewId;
 
-
-    @Column
-    private String prodTitle;
-
-    @Column
-    private String prodSubtitle;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mem_id")
+    @ToString.Exclude
+    private Member reviewWriter;
 
     @Column
-    private Integer prodPrice;
+    private String reviewQw;
 
     @Column
-    private Integer prodStock;
+    private String reviewTitle;
 
     @Column
-    private Integer prodCount;
+    private String reviewContent;
+
+    @Column
+    private String reviewImg;
+
+    @Column
+    private String shape;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime prodRegDate;
+    private LocalDateTime reviewRegDate;
 
-    @Column
-    private Integer prodWeight;
-
-    @Column
-    private String prodMainImg;
-
-    @Column
-    private String prodSubImg;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "prodId")
-    private List<Notice> notices;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_id")
+    @ToString.Exclude
+    private Product product;
 }

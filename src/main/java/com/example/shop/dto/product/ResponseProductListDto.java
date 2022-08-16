@@ -18,7 +18,7 @@ public class ResponseProductListDto extends ResponseListDto {
     @Data
     @SuperBuilder
     public static class ProductListItem {
-
+        private String prodId;
 
         private String prodTitle;
 

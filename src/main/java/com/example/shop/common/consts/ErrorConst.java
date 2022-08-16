@@ -72,6 +72,11 @@ public class ErrorConst {
             .message("There is no curriculum.")
             .build();
 
+    public static final ErrorCode NOT_FOUND_PRODUCT = ErrorCode.builder()
+            .code("ERR801")
+            .message("There is no Product.")
+            .build();
+
 
 
     @Data
