@@ -19,19 +19,19 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "member")
 public class Member {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_no")
     @GenericGenerator(
-            name = "id",
+            name = "member_no",
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "mem"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
+
             })
     @Column
-    private String id;
+    private String memberNo;
 
     @Column
     private String memId;

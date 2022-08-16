@@ -73,8 +73,13 @@ public class ErrorConst {
             .build();
 
     public static final ErrorCode NOT_FOUND_PRODUCT = ErrorCode.builder()
-            .code("ERR801")
+            .code("701")
             .message("There is no Product.")
+            .build();
+
+    public static final ErrorCode NOT_FOUND_MEMBER = ErrorCode.builder()
+            .code("702")
+            .message("There is no Member.")
             .build();
 
 
@@ -84,6 +89,7 @@ public class ErrorConst {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ErrorCode {
+
         private String code;
         private String message;
 

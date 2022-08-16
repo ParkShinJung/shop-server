@@ -115,7 +115,7 @@ public class ProductController {
                                 reviewPage.getContent().stream().map(
                                         review -> ResponseReviewListDto.ReviewListItem.builder()
                                                 .reviewId(review.getReviewId())
-                                                .reviewWriter(review.getReviewWriter().getMemId())
+                                                .reviewWriter(review.getMember().getMemId())
                                                 .reviewQw(review.getReviewQw())
                                                 .reviewTitle(review.getReviewTitle())
                                                 .reviewContent(review.getReviewContent())

@@ -1,11 +1,10 @@
 package com.example.shop.controller;
 
 import com.example.shop.common.consts.DateFormatConst;
+import com.example.shop.common.consts.ErrorConst;
+import com.example.shop.common.exception.NotFoundException;
 import com.example.shop.domain.account.*;
-import com.example.shop.dto.accont.RequestMemberListDto;
-import com.example.shop.dto.accont.RequestRegisterCompanyDto;
-import com.example.shop.dto.accont.RequestRegisterMemberDto;
-import com.example.shop.dto.accont.ResponseMemberListDto;
+import com.example.shop.dto.accont.*;
 import com.example.shop.dto.common.ResponseSavedIdDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -82,6 +81,27 @@ public class AccountController {
                         .build()
         );
     }
+    
+    @GetMapping("/member/{memId}")
+    public ResponseEntity<?> getMemberByMemId(@PathVariable String memId) {
+        Member member = memberRepository.findById(memId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+        
+        return ResponseEntity.ok(
+                ResponseMemberDto.builder()
+                        .memberNo(member.getMemberNo())
+                        .memId(member.getMemId())
+                        .memPw(member.getMemPw())
+                        .memName(member.getMemName())
+                        .memAddress1(member.getMemAddress1())
+                        .memAddress2(member.getMemAddress2())
+                        .memNumber(member.getMemNumber())
+                        .memBirthday(member.getMemBirthday())
+                        .memRegDate(member.getMemRegDate())
+                        .build()
+        );
+        
+    }
 
     @PostMapping("/member")
     public ResponseEntity<?> registerMember(@RequestBody RequestRegisterMemberDto memberDto) {
@@ -95,15 +115,17 @@ public class AccountController {
                         .memAddress2(memberDto.getMemAddress2())
                         .memNumber(memberDto.getMemNumber())
                         .memRegDate(LocalDateTime.now())
-                        .memBirthday(LocalDate.parse(memberDto.getMemBirthday(), DateFormatConst.DATE_FORMAT))
+                        .memBirthday(LocalDate.parse(memberDto.getMemBirthday().substring(0, 10), DateFormatConst.DATE_FORMAT))
                         .build());
+
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
         return ResponseEntity.created(selfLink).body(
                 ResponseSavedIdDto.builder()
-                        .savedId(savedMember.getId())
+                        .savedId(savedMember.getMemberNo())
                         .build()
         );
     }
+
 
 }

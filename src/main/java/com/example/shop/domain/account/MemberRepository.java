@@ -1,5 +1,6 @@
 package com.example.shop.domain.account;
 
+import com.example.shop.domain.product.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,4 +11,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, String> {
 
     Page<Member>  findAll(Specification<Member> specification, Pageable pageable);
+
+    Optional<Member> findByMemId(String memId);
 }

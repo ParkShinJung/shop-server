@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestRegisterQnaDto {
-
-    private String prodId;
     private String qnaWriter;
     private String qnaPw;
     private String qnaTitle;
@@ -20,4 +18,5 @@ public class RequestRegisterQnaDto {
     private String qnaFile;
     private String qnaRegDate;
     private YesNo qnaSecret;
+    private String prodId;
 }

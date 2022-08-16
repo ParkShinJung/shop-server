@@ -2,6 +2,7 @@ package com.example.shop.domain.info;
 
 import com.example.shop.common.type.YesNo;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
+import com.example.shop.domain.account.Member;
 import com.example.shop.domain.product.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -13,12 +14,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @ToString
-@RequiredArgsConstructor
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Qna {
@@ -35,13 +35,13 @@ public class Qna {
     @Column
     private String qnaId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_id", referencedColumnName = "prodId")
-    @ToString.Exclude
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "prod_id")
     private Product product;
 
-    @Column
-    private String qnaWriter;
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "mem_id")
+    private Member member;
 
     @Column
     private String qnaPw;

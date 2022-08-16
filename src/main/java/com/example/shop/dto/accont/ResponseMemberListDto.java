@@ -20,6 +20,8 @@ public class ResponseMemberListDto extends ResponseListDto {
     @Data
     @SuperBuilder
     public static class MemberListItem {
+        private String memberNo;
+
         private String memId;
 
         private String memPw;
