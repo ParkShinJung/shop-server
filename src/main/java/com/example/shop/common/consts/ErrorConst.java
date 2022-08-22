@@ -82,6 +82,11 @@ public class ErrorConst {
             .message("There is no Member.")
             .build();
 
+    public static final ErrorCode NOT_FOUND_ORDER = ErrorCode.builder()
+            .code("703")
+            .message("There is no OrderData.")
+            .build();
+
 
 
     @Data

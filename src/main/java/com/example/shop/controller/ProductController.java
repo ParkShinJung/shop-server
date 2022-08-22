@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.xml.ws.Response;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -31,6 +32,10 @@ public class ProductController {
     private final ReviewRepository reviewRepository;
 
     private final MemberRepository memberRepository;
+
+    private final OrderRepository orderRepository;
+
+    private final CartRepository cartRepository;
 
     @GetMapping
     public ResponseEntity<?> getProducts(@Valid RequestProductListDto requestListDto) {
@@ -128,10 +133,118 @@ public class ProductController {
         );
     }
 
-/*    @PostMapping("/review")
+    @PostMapping("/review")
     public ResponseEntity<?> registerReviews(@RequestBody RequestRegisterReviewDto reviewDto) {
+        Member member = memberRepository.findByMemId(reviewDto.getMember())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
 
-        Member reviewWriter = memberRepository.findMemberByMemId(reviewDto.getReviewWriter())
-                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_DATA));
+        Order order = orderRepository.findByOrdId(reviewDto.getOrder())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_ORDER));
+
+        Review review = reviewRepository.save(
+                Review.builder()
+                        .member(member)
+                        .reviewQw(reviewDto.getReviewQw())
+                        .reviewTitle(reviewDto.getReviewTitle())
+                        .reviewContent(reviewDto.getReviewContent())
+                        .reviewImg(reviewDto.getReviewImg())
+                        .order(order)
+                        .prodId(order.getProduct().getProdId())
+                        .reviewRegDate(LocalDateTime.now())
+                        .build()
+        );
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).body(
+                ResponseSavedIdDto.builder()
+                        .savedId(review.getReviewId())
+                        .build()
+        );
+    }
+
+    @GetMapping("/cart")
+    public ResponseEntity<?> getCart(@Valid RequestCartListDto cartListDto) {
+        PageRequest pageRequest = PageRequest.of(cartListDto.getPage(), cartListDto.getPageSize(), Sort.Direction.DESC, "cartId");
+        Specification<Cart> specification = CartSpecification.getCartListSpecification(cartListDto);
+        Page<Cart> cartPage = cartRepository.findAll(specification, pageRequest);
+
+        return ResponseEntity.ok(
+                ResponseCartListDto.builder()
+                        .totalCount(cartPage.getTotalElements())
+                        .page(cartPage.getNumber())
+                        .pageSize(cartPage.getSize())
+                        .cartListItems(
+                                cartPage.getContent().stream().map(
+                                        cart -> ResponseCartListDto.CartListItem.builder()
+                                                .cartId(cart.getCartId())
+                                                .member(cart.getMember().getMemId())
+                                                .product(cart.getProduct().getProdId())
+                                                .cartQuantity(cart.getCartQuantity())
+                                                .build()
+                                ).collect(Collectors.toList())
+                        )
+                        .build()
+        );
+    }
+
+    @GetMapping("/cart/{prodId}")
+    public ResponseEntity<?> getCartByProdId(@PathVariable String prodId, @Valid RequestCartListDto cartListDto) {
+
+        Product product = productRepository.findByProdId(prodId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        PageRequest pageRequest = PageRequest.of(cartListDto.getPage(), cartListDto.getPageSize(), Sort.Direction.DESC, "cartId");
+        Specification<Cart> specification = CartSpecification.getCartListSpecification(cartListDto);
+        Page<Cart> cartPage = cartRepository.findAll(specification, pageRequest);
+
+        return ResponseEntity.ok(
+                ResponseCartListDto.builder()
+                        .totalCount(cartPage.getTotalElements())
+                        .page(cartPage.getNumber())
+                        .pageSize(cartPage.getSize())
+                        .cartListItems(
+                                cartPage.getContent().stream().map(
+                                        cart -> ResponseCartListDto.CartListItem.builder()
+                                                .cartId(cart.getCartId())
+                                                .member(cart.getMember().getMemId())
+                                                .product(product.getProdId())
+                                                .cartQuantity(cart.getCartQuantity())
+                                                .build()
+                                ).collect(Collectors.toList())
+                        )
+                        .build()
+        );
+    }
+
+    @PostMapping("/cart")
+    public ResponseEntity<?> registerCart(@RequestBody RequestRegisterCartDto cartDto) {
+        Member member = memberRepository.findByMemId(cartDto.getMember())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        Product product = productRepository.findByProdId(cartDto.getProduct())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        Cart cart = cartRepository.save(
+                Cart.builder()
+                        .member(member)
+                        .product(product)
+                        .cartQuantity(cartDto.getCartQuantity())
+                        .build()
+        );
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).body(
+                ResponseSavedIdDto.builder()
+                        .savedId(cart.getCartId())
+                        .build()
+        );
+    }
+
+/*    @PostMapping("/order")
+    public ResponseEntity<?> registerOrder(@RequestBody Reque) {
+
+
     }*/
+
+
 }

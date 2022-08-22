@@ -2,19 +2,16 @@ package com.example.shop.dto.product;
 
 import com.example.shop.dto.common.ResponseListDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 
-@EqualsAndHashCode(callSuper = false)
 @Data
-@SuperBuilder
-public class RequestRegisterReviewDto extends ResponseListDto {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class RequestRegisterReviewDto {
 
-    private String reviewId;
-
-    private String reviewWriter;
+    private String member;
 
     private String reviewQw;
 
@@ -23,6 +20,12 @@ public class RequestRegisterReviewDto extends ResponseListDto {
     private String reviewContent;
 
     private String reviewImg;
+
+    private String order;
+
+    private String prodId;
+
+    private String reviewRegDate;
 
     // prod_id varchar(15) REFERENCES product(prod_id),
     // ord_id varchar(15) REFERENCES orders(ord_id),

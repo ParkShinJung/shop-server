@@ -2,13 +2,11 @@ package com.example.shop.domain.product;
 
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
 import com.example.shop.domain.account.Member;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Data
 @ToString
@@ -17,50 +15,29 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "review")
-public class Review {
-
-
+@Table(name = "cart")
+public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_id")
     @GenericGenerator(
-            name = "review_id",
+            name = "cart_id",
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "rev"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Cart"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
             })
     @Column
-    private String reviewId;
+    private String cartId;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "mem_id")
     private Member member;
 
-    @Column
-    private String reviewQw;
-
-    @Column
-    private String reviewTitle;
-
-    @Column
-    private String reviewContent;
-
-    @Column
-    private String reviewImg;
-
-    /*    @Column
-    private String shape;*/
-
-    @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime reviewRegDate;
-
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ord_id")
-    private Order order;
+    @JoinColumn(name = "prod_id")
+    private Product product;
 
     @Column
-    private String prodId;
+    private Integer cartQuantity;
 }

@@ -1,5 +1,6 @@
 package com.example.shop.domain.product;
 
+import com.example.shop.common.type.OrderStatus;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
 import com.example.shop.domain.account.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -64,4 +65,8 @@ public class Order {
 
     @Column
     private String ordPayment;
+
+    @Column(columnDefinition = "ENUM('order_confirmation', 'in_delivery', 'order_complete', 'order_cancel') DEFAULT 'order_confirmation'")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus ordStatus;
 }
