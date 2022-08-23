@@ -45,6 +45,11 @@ public class Order {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private String ordDate;
 
+    @Builder.Default
+    @Column(columnDefinition = "ENUM('order_confirmation', 'in_delivery', 'order_complete', 'order_cancel') DEFAULT 'order_confirmation'")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus ordStatus = OrderStatus.order_confirmation;
+
     @Column
     private String ordName;
 
@@ -66,7 +71,4 @@ public class Order {
     @Column
     private String ordPayment;
 
-    @Column(columnDefinition = "ENUM('order_confirmation', 'in_delivery', 'order_complete', 'order_cancel') DEFAULT 'order_confirmation'")
-    @Enumerated(EnumType.STRING)
-    private OrderStatus ordStatus;
 }

@@ -87,6 +87,16 @@ public class ErrorConst {
             .message("There is no OrderData.")
             .build();
 
+    public static final ErrorCode NOT_FOUND_CART = ErrorCode.builder()
+            .code("704")
+            .message("There is no Cart.")
+            .build();
+
+    public static final ErrorCode NOT_FOUND_REVIEW = ErrorCode.builder()
+            .code("705")
+            .message("There is no REVIEW.")
+            .build();
+
 
 
     @Data

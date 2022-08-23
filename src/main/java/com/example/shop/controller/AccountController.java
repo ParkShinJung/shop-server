@@ -103,6 +103,26 @@ public class AccountController {
         
     }
 
+    @PutMapping("/member/{memberNo}")
+    public ResponseEntity<?> putMember(@PathVariable String memberNo, @RequestBody RequestRegisterMemberDto memberDto) {
+
+        Member member = memberRepository.findByMemberNo(memberNo)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        member.setMemId(memberDto.getMemId());
+        member.setMemPw(memberDto.getMemPw());
+        member.setMemName(memberDto.getMemName());
+        member.setMemAddress1(memberDto.getMemAddress1());
+        member.setMemAddress2(memberDto.getMemAddress2());
+        member.setMemNumber(memberDto.getMemNumber());
+        member.setMemBirthday(LocalDate.parse(memberDto.getMemBirthday().substring(0, 10), DateFormatConst.DATE_FORMAT));
+        member.setMemModDate(LocalDateTime.now());
+
+        memberRepository.save(member);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/member")
     public ResponseEntity<?> registerMember(@RequestBody RequestRegisterMemberDto memberDto) {
 

@@ -7,6 +7,7 @@ import com.example.shop.domain.account.MemberRepository;
 import com.example.shop.domain.product.*;
 import com.example.shop.dto.common.ResponseSavedIdDto;
 import com.example.shop.dto.product.*;
+import com.fasterxml.classmate.types.ResolvedInterfaceType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.NoResultException;
 import javax.validation.Valid;
 import javax.xml.ws.Response;
 import java.net.URI;
@@ -93,6 +95,27 @@ public class ProductController {
         );
     }
 
+    @PutMapping({"prodId"})
+    public ResponseEntity<?> putProduct(@PathVariable String prodId, @RequestBody RequestRegisterProductDto productDto) {
+        Product product = productRepository.findProductByProdId(prodId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        product.setProdTitle(productDto.getProdTitle());
+        product.setProdSubtitle(productDto.getProdSubtitle());
+        product.setProdPrice(productDto.getProdPrice());
+        product.setProdStock(productDto.getProdStock());
+        product.setProdCount(productDto.getProdCount());
+        product.setProdWeight(productDto.getProdWeight());
+        product.setProdMainImg(productDto.getProdMainImg());
+        product.setProdSubImg(productDto.getProdSubImg());
+        product.setProdModDate(LocalDateTime.now());
+
+        productRepository.save(product);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).build();
+    }
+
     @DeleteMapping("{prodId}")
     public ResponseEntity<?> deleteProduct(@PathVariable String prodId) {
 
@@ -161,6 +184,41 @@ public class ProductController {
                         .build()
         );
     }
+    @PutMapping("/review/{reviewId}")
+    public ResponseEntity<?> putReviews(@PathVariable String reviewId, @RequestBody RequestRegisterReviewDto reviewDto) {
+        Review review = reviewRepository.findReviewByReviewId(reviewId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_REVIEW));
+
+        Member member = memberRepository.findByMemId(reviewDto.getMember())
+                        .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        Order order = orderRepository.findByOrdId(reviewDto.getOrder())
+                        .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_ORDER));
+
+        review.setMember(member);
+        review.setReviewQw(reviewDto.getReviewQw());
+        review.setReviewTitle(reviewDto.getReviewTitle());
+        review.setReviewContent(reviewDto.getReviewContent());
+        review.setReviewImg(reviewDto.getReviewImg());
+        review.setOrder(order);
+        review.setProdId(order.getProduct().getProdId());
+        reviewRepository.save(review);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).build();
+
+    }
+
+    @DeleteMapping("/review/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable String reviewId) {
+
+        Review review = reviewRepository.findReviewByReviewId(reviewId)
+                        .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_REVIEW));
+
+        reviewRepository.delete(review);
+
+        return ResponseEntity.noContent().build();
+    }
 
     @GetMapping("/cart")
     public ResponseEntity<?> getCart(@Valid RequestCartListDto cartListDto) {
@@ -214,6 +272,17 @@ public class ProductController {
                         )
                         .build()
         );
+    }
+
+    @DeleteMapping("/cart/{cartId}")
+    public ResponseEntity<?> deleteCart(@PathVariable String cartId) {
+
+        Cart cart = cartRepository.findCartByCartId(cartId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CART));
+
+        cartRepository.delete(cart);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/cart")

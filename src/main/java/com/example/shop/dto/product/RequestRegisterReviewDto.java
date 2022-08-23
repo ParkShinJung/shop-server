@@ -25,8 +25,6 @@ public class RequestRegisterReviewDto {
 
     private String prodId;
 
-    private String reviewRegDate;
-
     // prod_id varchar(15) REFERENCES product(prod_id),
     // ord_id varchar(15) REFERENCES orders(ord_id),
 
