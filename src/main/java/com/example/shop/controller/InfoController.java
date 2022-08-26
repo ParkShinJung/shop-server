@@ -86,6 +86,17 @@ public class InfoController {
         );
     }
 
+    @DeleteMapping("/notice/{notId}")
+    public ResponseEntity<?> deleteNotice(@PathVariable String notId) {
+
+        Notice notice = noticeRepository.findNoticeByNotId(notId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_NOTICE));
+
+        noticeRepository.delete(notice);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/qna")
     public ResponseEntity<?> registerQna(@RequestBody RequestRegisterQnaDto qnaDto) {
 
@@ -145,6 +156,16 @@ public class InfoController {
                         )
                         .build()
         );
+    }
+
+    @DeleteMapping("qna/{qnaId}")
+    public ResponseEntity<?> delete(@PathVariable String qnaId) {
+        Qna qna = qnaRepository.findQnaByQnaId(qnaId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_QNA));
+
+        qnaRepository.delete(qna);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

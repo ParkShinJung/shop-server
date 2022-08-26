@@ -97,6 +97,16 @@ public class ErrorConst {
             .message("There is no REVIEW.")
             .build();
 
+    public static final ErrorCode NOT_FOUND_QNA = ErrorCode.builder()
+            .code("706")
+            .message("There is no QnaInfo.")
+            .build();
+
+    public static final ErrorCode NOT_FOUND_NOTICE = ErrorCode.builder()
+            .code("707")
+            .message("There is no Notice.")
+            .build();
+
 
 
     @Data

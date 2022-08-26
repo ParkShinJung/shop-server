@@ -147,5 +147,16 @@ public class AccountController {
         );
     }
 
+    @DeleteMapping("/member/{memberNo}")
+    public ResponseEntity<?> deleteMember(@PathVariable String memberNo) {
+
+        Member member = memberRepository.findByMemberNo(memberNo)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        memberRepository.delete(member);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
