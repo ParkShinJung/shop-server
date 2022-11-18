@@ -11,44 +11,44 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@ToString
-@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@Table(
+        name = "notice"
+)
 public class Notice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "not_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notice_id")
     @GenericGenerator(
-            name = "not_id",
+            name = "notice_id",
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Not"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "NT"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%010d")
             })
+    @Column(length = 12)
+    private String noticeId;
 
     @Column
-    private String notId;
+    private String writer;
 
     @Column
-    private String notWriter;
+    private String password;
 
     @Column
-    private String notPw;
+    private String title;
 
     @Column
-    private String notTitle;
+    private String content;
 
     @Column
-    private String notContent;
-
-    @Column
-    private String notFile;
+    private String file;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime notRegDate;
+    private LocalDateTime regDate;
 }

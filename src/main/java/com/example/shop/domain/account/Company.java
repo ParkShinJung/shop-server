@@ -16,27 +16,27 @@ import javax.persistence.*;
 public class Company {
 
     @Id
-    @Column
-    private String comId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
-    private String comPw;
+    private String companyPassword;
 
     @Column
-    private String comName;
+    private String companyName;
 
     @Column
-    private String comCeo;
+    private String ceoName;
 
     @Column
-    private String comNumber;
+    private String contact;
 
     @Column
-    private String comAddress1;
+    private String address1;
 
     @Column
-    private String comAddress2;
+    private String address2;
 
     @Column
-    private String comEmail;
+    private String email;
 }

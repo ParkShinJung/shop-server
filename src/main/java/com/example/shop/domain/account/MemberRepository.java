@@ -8,13 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, String> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Page<Member>  findAll(Specification<Member> specification, Pageable pageable);
-
-    Optional<Member> findByMemId(String memId);
-
-    Optional<Member> findByMemberNo(String memberNo);
-
-    Optional<Member> findMemberByMemberNo(String memberNo);
 }

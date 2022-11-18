@@ -29,37 +29,37 @@ public class Qna {
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "qna"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "QNA"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%09d")
             })
-    @Column
+    @Column(length = 12)
     private String qnaId;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "mem_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column
-    private String qnaPw;
+    private String password;
 
     @Column
-    private String qnaTitle;
+    private String title;
 
     @Column
-    private String qnaContent;
+    private String content;
 
     @Column
-    private String qnaFile;
+    private String file;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime qnaRegDate;
+    private LocalDateTime regDate;
 
     @Column(columnDefinition = "ENUM('Y', 'N') DEFAULT 'Y'")
     @Enumerated(EnumType.STRING)
-    private YesNo qnaSecret;
+    private YesNo secret;
 }

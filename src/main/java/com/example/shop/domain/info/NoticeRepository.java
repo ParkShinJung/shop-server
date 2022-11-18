@@ -9,7 +9,4 @@ import java.util.Optional;
 
 public interface NoticeRepository extends JpaRepository<Notice, String> {
 
-    Page<Notice> findAll(Specification<Notice> specification, Pageable pageable);
-
-    Optional<Notice> findNoticeByNotId(String notId);
 }

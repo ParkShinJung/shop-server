@@ -23,52 +23,55 @@ import java.util.List;
 @Table(name = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prod_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id")
     @GenericGenerator(
-            name = "prod_id",
+            name = "product_id",
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Prod"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "PD"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%010d")
             })
-    @Column
-    private String prodId;
+    @Column(length = 12)
+    private String productId;
 
 
     @Column
-    private String prodTitle;
+    private String title;
 
     @Column
-    private String prodSubtitle;
+    private String subtitle;
 
     @Column
-    private Integer prodPrice;
+    private Long price;
 
     @Column
-    private Integer prodStock;
+    private Long stock;
 
     @Column
-    private Integer prodCount;
-
-    @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime prodRegDate;
+    private Long count;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime prodModDate;
+    private LocalDateTime regDate;
 
     @Column
-    private Integer prodWeight;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime modDate;
 
     @Column
-    private String prodMainImg;
+    private Integer weight;
 
     @Column
-    private String prodSubImg;
+    private String mainImg;
+
+    @Column
+    private String subImg;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "prodId")
+    @JoinColumn(name = "productId")
     private List<Notice> notices;
+
+    @Column
+    private Long discountRate;
 }

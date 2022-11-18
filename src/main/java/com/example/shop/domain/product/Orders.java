@@ -17,9 +17,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "order")
-public class Order {
-
+@Table(name = "orders")
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ord_id")
     @GenericGenerator(
@@ -27,48 +26,48 @@ public class Order {
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "Ord"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "ORD"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%09d")
             })
-    @Column
+    @Column(length = 12)
     private String ordId;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "mem_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private String ordDate;
+    private String orderDate;
 
     @Builder.Default
     @Column(columnDefinition = "ENUM('order_confirmation', 'in_delivery', 'order_complete', 'order_cancel') DEFAULT 'order_confirmation'")
     @Enumerated(EnumType.STRING)
-    private OrderStatus ordStatus = OrderStatus.order_confirmation;
+    private OrderStatus status = OrderStatus.order_confirmation;
 
     @Column
-    private String ordName;
+    private String name;
 
     @Column
-    private String ordPhone;
+    private String contact;
 
     @Column
-    private String ordAddress1;
+    private String address1;
 
     @Column
-    private String ordAddress2;
+    private String address2;
 
     @Column
-    private String ordPost;
+    private String zipcode;
 
     @Column
-    private String ordAmount;
+    private String amount;
 
     @Column
-    private String ordPayment;
+    private String payment;
 
 }

@@ -28,21 +28,21 @@ public class Review {
             strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "rev"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "RV"),
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%010d")
             })
-    @Column
+    @Column(length = 12)
     private String reviewId;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "mem_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column
-    private String reviewQw;
+//    @Column
+//    private String qw;
 
     @Column
-    private String reviewTitle;
+    private String title;
 
     @Column
     private String reviewContent;
@@ -63,7 +63,7 @@ public class Review {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ord_id")
-    private Order order;
+    private Orders order;
 
     @Column
     private String prodId;

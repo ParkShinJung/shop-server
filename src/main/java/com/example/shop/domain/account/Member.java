@@ -19,47 +19,38 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "member")
 public class Member {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_no")
-    @GenericGenerator(
-            name = "member_no",
-            strategy = "com.example.shop.common.util.StringPrefixedSequenceIdGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "mem"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-            })
-    @Column
-    private String memberNo;
+    @Column(length = 20, unique = true)
+    private String memberId;
 
     @Column
-    private String memId;
+    private String memberPassword;
 
     @Column
-    private String memPw;
+    private String memberName;
 
     @Column
-    private String memName;
+    private String address1;
 
     @Column
-    private String memAddress1;
+    private String address2;
 
     @Column
-    private String memAddress2;
-
-    @Column
-    private String memNumber;
+    private String contact;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime memRegDate;
+    private LocalDateTime regDate;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime memModDate;
+    private LocalDateTime modDate;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate memBirthday;
+    private LocalDate birthday;
 }
