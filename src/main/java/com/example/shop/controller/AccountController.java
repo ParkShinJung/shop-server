@@ -4,10 +4,7 @@ import com.example.shop.common.consts.DateFormatConst;
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
 import com.example.shop.domain.account.*;
-import com.example.shop.dto.account.RequestMemberListDto;
-import com.example.shop.dto.account.RequestRegisterCompanyDto;
-import com.example.shop.dto.account.RequestRegisterMemberDto;
-import com.example.shop.dto.account.ResponseMemberListDto;
+import com.example.shop.dto.account.*;
 import com.example.shop.dto.common.RequestListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -130,19 +127,41 @@ public class AccountController {
                 .build());
     }
 
+    @GetMapping("/member/{id}")
+    public ResponseEntity<?> getMemberDetail(@PathVariable Long id) {
+
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        return ResponseEntity.ok(ResponseMemberDto.builder()
+                .id(member.getId())
+                .memberId(member.getMemberId())
+                .memberPassword(member.getMemberPassword())
+                .memberName(member.getMemberName())
+                .address1(member.getAddress1())
+                .address2(member.getAddress2())
+                .contact(member.getContact())
+                .birthday(member.getBirthday())
+                .modDate(member.getModDate())
+                .regDate(member.getRegDate())
+                .build());
+    }
+
     @PutMapping("/member/{id}")
     public ResponseEntity<?> updateMemberInfo(@PathVariable Long id, @RequestBody RequestRegisterMemberDto registerMemberDto) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
 
-        registerMemberDto.setMemberId(member.getMemberId());
-        registerMemberDto.setMemberPassword(member.getMemberPassword());
-        registerMemberDto.setMemberName(member.getMemberName());
-        registerMemberDto.setAddress1(member.getAddress1());
-        registerMemberDto.setAddress2(member.getAddress2());
-        registerMemberDto.setContact(member.getContact());
-        registerMemberDto.setBirthday(member.getBirthday());
+        member.setMemberId(registerMemberDto.getMemberId());
+        member.setMemberPassword(registerMemberDto.getMemberPassword());
+        member.setMemberName(registerMemberDto.getMemberName());
+        member.setAddress1(registerMemberDto.getAddress1());
+        member.setAddress2(registerMemberDto.getAddress2());
+        member.setContact(registerMemberDto.getContact());
+        member.setBirthday(registerMemberDto.getBirthday());
         member.setModDate(LocalDateTime.now());
+
+        log.info("=======================>" + member);
 
         memberRepository.save(member);
 
