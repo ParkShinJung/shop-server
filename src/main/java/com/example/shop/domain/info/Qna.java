@@ -1,5 +1,6 @@
 package com.example.shop.domain.info;
 
+import com.example.shop.common.type.QnaStatus;
 import com.example.shop.common.type.YesNo;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
 import com.example.shop.domain.account.Member;
@@ -57,9 +58,13 @@ public class Qna {
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime regDate;
+    private LocalDateTime regDateTime;
 
     @Column(columnDefinition = "ENUM('Y', 'N') DEFAULT 'Y'")
     @Enumerated(EnumType.STRING)
     private YesNo secret;
+
+    @Column(columnDefinition = "ENUM('before', 'after') DEFAULT 'before'")
+    @Enumerated(EnumType.STRING)
+    private QnaStatus qnaStatus;
 }
