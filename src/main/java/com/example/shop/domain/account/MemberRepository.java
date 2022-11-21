@@ -10,4 +10,8 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+    Page<Member> findAll(Specification<Member> memberSpecification, Pageable pageable);
+
+    Optional<Member> findById(Long id);
+
 }

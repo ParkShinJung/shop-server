@@ -1,7 +1,6 @@
-package com.example.shop.dto.accont;
+package com.example.shop.dto.account;
 
 import com.example.shop.dto.common.RequestListDto;
-import lombok.*;
 
 public class RequestMemberListDto extends RequestListDto {
 }
