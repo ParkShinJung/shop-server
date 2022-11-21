@@ -19,8 +19,8 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String companyPassword;
+/*    @Column
+    private String companyPassword;*/
 
     @Column
     private String companyName;

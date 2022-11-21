@@ -30,9 +30,9 @@ public class Product {
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "PD"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%010d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%06d")
             })
-    @Column(length = 12)
+    @Column(length = 8)
     private String productId;
 
 
@@ -68,9 +68,9 @@ public class Product {
     @Column
     private String subImg;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+/*    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "productId")
-    private List<Notice> notices;
+    private List<Notice> notices;*/
 
     @Column
     private Long discountRate;

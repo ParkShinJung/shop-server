@@ -1,5 +1,6 @@
 package com.example.shop.domain.info;
 
+import com.example.shop.common.type.QnaStatus;
 import com.example.shop.common.type.YesNo;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
 import com.example.shop.domain.account.Member;
@@ -30,9 +31,9 @@ public class Qna {
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "QNA"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%09d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d")
             })
-    @Column(length = 12)
+    @Column(length = 8)
     private String qnaId;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
@@ -57,9 +58,13 @@ public class Qna {
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime regDate;
+    private LocalDateTime regDateTime;
 
     @Column(columnDefinition = "ENUM('Y', 'N') DEFAULT 'Y'")
     @Enumerated(EnumType.STRING)
     private YesNo secret;
+
+    @Column(columnDefinition = "ENUM('before', 'after') DEFAULT 'before'")
+    @Enumerated(EnumType.STRING)
+    private QnaStatus qnaStatus;
 }

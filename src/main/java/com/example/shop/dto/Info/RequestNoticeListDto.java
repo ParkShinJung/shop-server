@@ -1,4 +1,4 @@
-package com.example.shop.dto.info;
+package com.example.shop.dto.Info;
 
 import com.example.shop.dto.common.RequestListDto;
 
