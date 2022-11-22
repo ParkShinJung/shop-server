@@ -43,7 +43,10 @@ public class Product {
     private String subtitle;
 
     @Column
-    private Long price;
+    private Long price;     //정가
+
+    @Column
+    private Long discountPrice;     //할인적용된가격
 
     @Column
     private Long stock;
@@ -53,7 +56,7 @@ public class Product {
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime regDate;
+    private LocalDateTime regDateTime;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

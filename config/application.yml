@@ -27,6 +27,10 @@ spring:
     username: sjpark
     password: 980320
 
+#    url: jdbc:mariadb://175.45.201.217:3306/shops
+#    username: sjpark
+#    password: 980320
+
   # MongoDB
   data:
     mongodb:
@@ -43,7 +47,7 @@ spring:
     hibernate:
       ddl-auto: update
 server:
-  port: 8080
+  port: 18100
 
 logging:
   level:
