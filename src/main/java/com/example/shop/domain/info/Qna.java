@@ -66,5 +66,5 @@ public class Qna {
 
     @Column(columnDefinition = "ENUM('BEFORE', 'AFTER') DEFAULT 'BEFORE'")
     @Enumerated(EnumType.STRING)
-    private QnaStatus qnaStatus;
+    private QnaStatus qnaStatus = QnaStatus.before;
 }

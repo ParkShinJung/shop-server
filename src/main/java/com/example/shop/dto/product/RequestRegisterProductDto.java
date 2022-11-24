@@ -1,5 +1,6 @@
 package com.example.shop.dto.product;
 
+import com.example.shop.common.type.ProductStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,6 @@ public class RequestRegisterProductDto {
     private String subImg;
     private Long discountRate;
     private Long discountPrice;
+    private ProductStatus productStatus;
 
 }

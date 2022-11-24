@@ -1,5 +1,6 @@
 package com.example.shop.dto.product;
 
+import com.example.shop.common.type.ProductStatus;
 import com.example.shop.dto.common.ResponseListDto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -33,6 +34,7 @@ public class ResponseProductListDto extends ResponseListDto {
         private String subImg;
         private Long discountRate;
         private Long discountPrice;
+        private ProductStatus productStatus;
 
     }
 }

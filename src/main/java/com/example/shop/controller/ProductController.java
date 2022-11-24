@@ -2,6 +2,7 @@ package com.example.shop.controller;
 
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
+import com.example.shop.common.type.ProductStatus;
 import com.example.shop.domain.product.Product;
 import com.example.shop.domain.product.ProductRepository;
 import com.example.shop.domain.product.ProductSpecification;
@@ -46,7 +47,10 @@ public class ProductController {
                 .subImg(registerProductDto.getSubImg())
                 .discountRate(registerProductDto.getDiscountRate())
                 .discountPrice(registerProductDto.getDiscountPrice())
+                .productStatus(ProductStatus.SALE)
                 .build();
+
+        productRepository.save(product);
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
         return ResponseEntity.created(selfLink).build();
@@ -81,6 +85,7 @@ public class ProductController {
                                         .subImg(product.getSubImg())
                                         .discountRate(product.getDiscountRate())
                                         .discountPrice(product.getDiscountPrice())
+                                        .productStatus(product.getProductStatus())
                                         .build()
                         ).collect(Collectors.toList())
                 )
@@ -107,6 +112,7 @@ public class ProductController {
                 .subImg(product.getSubImg())
                 .discountRate(product.getDiscountRate())
                 .discountPrice(product.getDiscountPrice())
+                .productStatus(product.getProductStatus())
                 .build());
     }
 
@@ -126,10 +132,20 @@ public class ProductController {
         product.setSubImg(registerProductDto.getSubImg());
         product.setDiscountRate(registerProductDto.getDiscountRate());
         product.setDiscountPrice(registerProductDto.getDiscountPrice());
+        product.setProductStatus(registerProductDto.getProductStatus());
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
 
         return ResponseEntity.created(selfLink).build();
+    }
 
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteProductInfo(@PathVariable String productId) {
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        productRepository.delete(product);
+
+        return ResponseEntity.noContent().build();
     }
 }
