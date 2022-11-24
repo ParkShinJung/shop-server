@@ -113,6 +113,19 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProductInfo(@PathVariable String productId, @RequestBody RequestRegisterProductDto registerProductDto) {
 
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        product.setTitle(registerProductDto.getTitle());
+        product.setSubtitle(registerProductDto.getSubtitle());
+        product.setPrice(registerProductDto.getPrice());
+        product.setStock(registerProductDto.getStock());
+        product.setCount(registerProductDto.getCount());
+        product.setWeight(registerProductDto.getWeight());
+        product.setMainImg(registerProductDto.getMainImg());
+        product.setSubImg(registerProductDto.getSubImg());
+        product.setDiscountRate(registerProductDto.getDiscountRate());
+        product.setDiscountPrice(registerProductDto.getDiscountPrice());
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
 

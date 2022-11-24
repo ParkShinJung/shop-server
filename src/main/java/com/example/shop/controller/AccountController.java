@@ -3,6 +3,7 @@ package com.example.shop.controller;
 import com.example.shop.common.consts.DateFormatConst;
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
+import com.example.shop.common.type.AccountType;
 import com.example.shop.domain.account.*;
 import com.example.shop.dto.account.*;
 import com.example.shop.dto.common.RequestListDto;
@@ -84,6 +85,7 @@ public class AccountController {
                 .address2(registerMemberDto.getAddress2())
                 .contact(registerMemberDto.getContact())
                 .birthday(registerMemberDto.getBirthday())
+                .accountType(registerMemberDto.getAccountType())
                 .modDate(LocalDateTime.now())
                 .regDate(LocalDateTime.now())
                 .build();
@@ -119,6 +121,7 @@ public class AccountController {
                                         .address2(member.getAddress2())
                                         .contact(member.getContact())
                                         .birthday(member.getBirthday())
+                                        .accountType(member.getAccountType())
                                         .modDate(member.getModDate())
                                         .regDate(member.getRegDate())
                                         .build()
@@ -141,6 +144,7 @@ public class AccountController {
                 .address1(member.getAddress1())
                 .address2(member.getAddress2())
                 .contact(member.getContact())
+                .accountType(member.getAccountType())
                 .birthday(member.getBirthday())
                 .modDate(member.getModDate())
                 .regDate(member.getRegDate())
@@ -159,9 +163,8 @@ public class AccountController {
         member.setAddress2(registerMemberDto.getAddress2());
         member.setContact(registerMemberDto.getContact());
         member.setBirthday(registerMemberDto.getBirthday());
+        member.setAccountType(registerMemberDto.getAccountType());
         member.setModDate(LocalDateTime.now());
-
-        log.info("=======================>" + member);
 
         memberRepository.save(member);
 

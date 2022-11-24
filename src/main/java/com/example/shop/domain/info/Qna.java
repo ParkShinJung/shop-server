@@ -64,7 +64,7 @@ public class Qna {
     @Enumerated(EnumType.STRING)
     private YesNo secret;
 
-    @Column(columnDefinition = "ENUM('before', 'after') DEFAULT 'before'")
+    @Column(columnDefinition = "ENUM('BEFORE', 'AFTER') DEFAULT 'BEFORE'")
     @Enumerated(EnumType.STRING)
     private QnaStatus qnaStatus;
 }
