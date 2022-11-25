@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 @Table(name = "review")
 public class Review {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id")
     @GenericGenerator(
@@ -45,26 +44,27 @@ public class Review {
     private String title;
 
     @Column
-    private String reviewContent;
+    private String content;
 
     @Column
-    private String reviewImg;
+    private String image;
 
     /*    @Column
     private String shape;*/
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime reviewRegDate;
+    private LocalDateTime regDateTime;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private  LocalDateTime reviewModDate;
+    private  LocalDateTime modDateTime;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+/*    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ord_id")
-    private Orders order;
+    private Orders order;*/
 
-    @Column
-    private String prodId;
+    @OneToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

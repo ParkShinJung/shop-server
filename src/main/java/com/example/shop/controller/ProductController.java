@@ -3,13 +3,13 @@ package com.example.shop.controller;
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
 import com.example.shop.common.type.ProductStatus;
-import com.example.shop.domain.product.Product;
-import com.example.shop.domain.product.ProductRepository;
-import com.example.shop.domain.product.ProductSpecification;
-import com.example.shop.dto.product.RequestProductListDto;
-import com.example.shop.dto.product.RequestRegisterProductDto;
-import com.example.shop.dto.product.ResponseProductDto;
-import com.example.shop.dto.product.ResponseProductListDto;
+import com.example.shop.domain.account.Member;
+import com.example.shop.domain.account.MemberRepository;
+import com.example.shop.domain.info.Qna;
+import com.example.shop.domain.info.QnaSpecification;
+import com.example.shop.domain.product.*;
+import com.example.shop.dto.common.RequestListDto;
+import com.example.shop.dto.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,6 +31,10 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final ProductRepository productRepository;
+
+    private final MemberRepository memberRepository;
+
+    private final ReviewRepository reviewRepository;
 
     @PostMapping
     public ResponseEntity<?> registerProduct(@RequestBody RequestRegisterProductDto registerProductDto) {
@@ -145,6 +149,137 @@ public class ProductController {
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
 
         productRepository.delete(product);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<?> registerReview(@RequestBody RequestRegisterReviewDto requestRegisterReviewDto) {
+
+        Product product = productRepository.findByProductId(requestRegisterReviewDto.getProductId())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        Member member = memberRepository.findById(requestRegisterReviewDto.getMemberId())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        Review review = Review.builder()
+                .member(member)
+                .title(requestRegisterReviewDto.getTitle())
+                .content(requestRegisterReviewDto.getContent())
+                .image(requestRegisterReviewDto.getImage())
+                .product(product)
+                .regDateTime(LocalDateTime.now())
+                .build();
+
+        reviewRepository.save(review);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).build();
+    }
+
+    @GetMapping("/review")
+    public ResponseEntity<?> getReviewList(@Valid RequestListDto requestListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "regDateTime");
+        Page<Review> reviewList = reviewRepository.findAll(pageRequest);
+
+        return ResponseEntity.ok(ResponseReviewListDto.builder()
+                .page(reviewList.getNumber())
+                .pageSize(reviewList.getSize())
+                .totalCount(reviewList.getTotalElements())
+                .reviewItems(
+                        reviewList.stream().map(
+                                review -> ResponseReviewListDto.ReviewItems.builder()
+                                        .reviewId(review.getReviewId())
+                                        .memberId(review.getMember().getMemberId())
+                                        .memberName(review.getMember().getMemberName())
+                                        .title(review.getTitle())
+                                        .content(review.getContent())
+                                        .image(review.getImage())
+                                        .productId(review.getProduct().getProductId())
+                                        .productName(review.getProduct().getTitle())
+                                        .regDateTime(review.getRegDateTime())
+                                        .modDateTime(review.getModDateTime())
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
+    }
+
+    @GetMapping("/review/{productId}")
+    public ResponseEntity<?> getReviewListByProductId(@PathVariable String productId, @Valid RequestListDto requestListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "regDateTime");
+        Page<Review> reviewList = reviewRepository.findAllByProduct_ProductId(productId, pageRequest);
+
+        return ResponseEntity.ok(ResponseReviewListDto.builder()
+                .page(reviewList.getNumber())
+                .pageSize(reviewList.getSize())
+                .totalCount(reviewList.getTotalElements())
+                .reviewItems(
+                        reviewList.stream().map(
+                                review -> ResponseReviewListDto.ReviewItems.builder()
+                                        .reviewId(review.getReviewId())
+                                        .memberId(review.getMember().getMemberId())
+                                        .memberName(review.getMember().getMemberName())
+                                        .title(review.getTitle())
+                                        .content(review.getContent())
+                                        .image(review.getImage())
+                                        .productId(review.getProduct().getProductId())
+                                        .productName(review.getProduct().getTitle())
+                                        .regDateTime(review.getRegDateTime())
+                                        .modDateTime(review.getModDateTime())
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
+    }
+
+    @GetMapping("/review/{reviewId}")
+    public ResponseEntity<?> getReviewDetail(@PathVariable String reviewId) {
+
+        Review review = reviewRepository.findByReviewId(reviewId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_REVIEW));
+
+        return ResponseEntity.ok(ResponseReviewDto.builder()
+                .reviewId(review.getReviewId())
+                .memberId(review.getMember().getMemberId())
+                .memberName(review.getMember().getMemberName())
+                .title(review.getTitle())
+                .content(review.getContent())
+                .image(review.getImage())
+                .productId(review.getProduct().getProductId())
+                .productName(review.getProduct().getTitle())
+                .regDateTime(review.getRegDateTime())
+                .modDateTime(review.getModDateTime())
+                .build());
+
+    }
+
+    @PutMapping("/review/{reviewId}")
+    public ResponseEntity<?> updateReviewInfo(@PathVariable String reviewId, @RequestBody RequestUpdateReviewDto requestUpdateReviewDto) {
+
+        Review review = reviewRepository.findByReviewId(reviewId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_REVIEW));
+
+        review.setTitle(requestUpdateReviewDto.getTitle());
+        review.setContent(requestUpdateReviewDto.getContent());
+        review.setImage(requestUpdateReviewDto.getImage());
+        review.setModDateTime(LocalDateTime.now());
+
+        reviewRepository.save(review);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).build();
+    }
+
+    @DeleteMapping("/review/{reviewId}")
+    public ResponseEntity<?> deleteReviewInfo(@PathVariable String reviewId) {
+
+        Review review = reviewRepository.findByReviewId(reviewId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_REVIEW));
+
+        reviewRepository.delete(review);
 
         return ResponseEntity.noContent().build();
     }
