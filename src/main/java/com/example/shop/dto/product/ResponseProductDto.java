@@ -21,7 +21,7 @@ public class ResponseProductDto {
     private Long count;
     private LocalDateTime regDateTime;
     private LocalDateTime modDate;
-    private Integer weight;
+    private String weight;
     private String mainImg;
     private String subImg;
     private Long discountRate;

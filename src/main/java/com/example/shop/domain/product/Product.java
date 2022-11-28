@@ -65,7 +65,7 @@ public class Product {
     private LocalDateTime modDate;
 
     @Column
-    private Integer weight;
+    private String weight;
 
     @Column
     private String mainImg;

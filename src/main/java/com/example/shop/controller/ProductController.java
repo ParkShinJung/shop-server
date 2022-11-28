@@ -51,8 +51,10 @@ public class ProductController {
                 .subImg(registerProductDto.getSubImg())
                 .discountRate(registerProductDto.getDiscountRate())
                 .discountPrice(registerProductDto.getDiscountPrice())
-                .productStatus(ProductStatus.SALE)
+                .productStatus(registerProductDto.getProductStatus())
                 .build();
+
+        log.info("===================>" + product);
 
         productRepository.save(product);
 

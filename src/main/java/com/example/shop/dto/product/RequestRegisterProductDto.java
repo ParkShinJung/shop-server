@@ -20,7 +20,7 @@ public class RequestRegisterProductDto {
     private Long price;
     private Long stock;
     private Long count;
-    private Integer weight;
+    private String weight;
     private String mainImg;
     private String subImg;
     private Long discountRate;
