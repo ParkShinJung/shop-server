@@ -1,6 +1,7 @@
 package com.example.shop.dto.product;
 
 import com.example.shop.common.type.ProductStatus;
+import com.example.shop.domain.common.Category;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 
 @Data
 @Builder
@@ -26,5 +28,6 @@ public class RequestRegisterProductDto {
     private Long discountRate;
     private Long discountPrice;
     private ProductStatus productStatus;
+    private String categoryId;
 
 }

@@ -35,6 +35,8 @@ public class ResponseProductListDto extends ResponseListDto {
         private Long discountRate;
         private Long discountPrice;
         private ProductStatus productStatus;
+        private String categoryId;
+        private String categoryName;
 
     }
 }

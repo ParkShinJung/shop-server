@@ -5,6 +5,8 @@ import com.example.shop.common.exception.NotFoundException;
 import com.example.shop.common.type.ProductStatus;
 import com.example.shop.domain.account.Member;
 import com.example.shop.domain.account.MemberRepository;
+import com.example.shop.domain.common.Category;
+import com.example.shop.domain.common.CategoryRepository;
 import com.example.shop.domain.info.Qna;
 import com.example.shop.domain.info.QnaSpecification;
 import com.example.shop.domain.product.*;
@@ -36,8 +38,13 @@ public class ProductController {
 
     private final ReviewRepository reviewRepository;
 
+    private final CategoryRepository categoryRepository;
+
     @PostMapping
     public ResponseEntity<?> registerProduct(@RequestBody RequestRegisterProductDto registerProductDto) {
+
+        Category category = categoryRepository.findByCategoryId(registerProductDto.getCategoryId())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
 
         Product product = Product.builder()
                 .title(registerProductDto.getTitle())
@@ -52,6 +59,7 @@ public class ProductController {
                 .discountRate(registerProductDto.getDiscountRate())
                 .discountPrice(registerProductDto.getDiscountPrice())
                 .productStatus(registerProductDto.getProductStatus())
+                .category(category)
                 .build();
 
         log.info("===================>" + product);
@@ -92,6 +100,8 @@ public class ProductController {
                                         .discountRate(product.getDiscountRate())
                                         .discountPrice(product.getDiscountPrice())
                                         .productStatus(product.getProductStatus())
+                                        .categoryId(product.getCategory().getCategoryId())
+                                        .categoryName(product.getCategory().getCategoryName())
                                         .build()
                         ).collect(Collectors.toList())
                 )
@@ -119,6 +129,8 @@ public class ProductController {
                 .discountRate(product.getDiscountRate())
                 .discountPrice(product.getDiscountPrice())
                 .productStatus(product.getProductStatus())
+                .categoryId(product.getCategory().getCategoryId())
+                .categoryName(product.getCategory().getCategoryName())
                 .build());
     }
 
@@ -127,6 +139,9 @@ public class ProductController {
 
         Product product = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        Category category = categoryRepository.findByCategoryId(registerProductDto.getCategoryId())
+                        .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
 
         product.setTitle(registerProductDto.getTitle());
         product.setSubtitle(registerProductDto.getSubtitle());
@@ -139,6 +154,7 @@ public class ProductController {
         product.setDiscountRate(registerProductDto.getDiscountRate());
         product.setDiscountPrice(registerProductDto.getDiscountPrice());
         product.setProductStatus(registerProductDto.getProductStatus());
+        product.setCategory(category);
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
 

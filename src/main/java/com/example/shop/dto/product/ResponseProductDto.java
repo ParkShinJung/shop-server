@@ -27,5 +27,7 @@ public class ResponseProductDto {
     private Long discountRate;
     private Long discountPrice;
     private ProductStatus productStatus;
+    private String categoryId;
+    private String categoryName;
 
 }

@@ -3,6 +3,7 @@ package com.example.shop.domain.product;
 import com.example.shop.common.type.OrderStatus;
 import com.example.shop.common.type.ProductStatus;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
+import com.example.shop.domain.common.Category;
 import com.example.shop.domain.info.Notice;
 import com.example.shop.domain.info.Qna;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -84,4 +85,8 @@ public class Product {
     @Column(columnDefinition = "ENUM('SALE', 'SOLD_OUT', 'END') DEFAULT 'SALE'")
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus = ProductStatus.SALE;
+
+    @OneToOne
+    @JoinColumn(name="category_id")
+    private Category category;
 }
