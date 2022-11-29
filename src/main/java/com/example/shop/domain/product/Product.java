@@ -43,7 +43,7 @@ public class Product {
     private String title;
 
     @Column
-    private String subtitle;
+    private String subTitle;
 
     @Column
     private Long price;     //정가

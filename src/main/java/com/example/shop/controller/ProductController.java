@@ -48,7 +48,7 @@ public class ProductController {
 
         Product product = Product.builder()
                 .title(registerProductDto.getTitle())
-                .subtitle(registerProductDto.getSubtitle())
+                .subTitle(registerProductDto.getSubtitle())
                 .price(registerProductDto.getPrice())
                 .stock(registerProductDto.getStock())
                 .count(registerProductDto.getCount())
@@ -88,7 +88,7 @@ public class ProductController {
                                 product -> ResponseProductListDto.ProductItems.builder()
                                         .productId(product.getProductId())
                                         .title(product.getTitle())
-                                        .subtitle(product.getSubtitle())
+                                        .subtitle(product.getSubTitle())
                                         .price(product.getPrice())
                                         .stock(product.getStock())
                                         .count(product.getCount())
@@ -117,7 +117,7 @@ public class ProductController {
         return ResponseEntity.ok(ResponseProductDto.builder()
                 .productId(product.getProductId())
                 .title(product.getTitle())
-                .subtitle(product.getSubtitle())
+                .subtitle(product.getSubTitle())
                 .price(product.getPrice())
                 .stock(product.getStock())
                 .count(product.getCount())
@@ -144,7 +144,7 @@ public class ProductController {
                         .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
 
         product.setTitle(registerProductDto.getTitle());
-        product.setSubtitle(registerProductDto.getSubtitle());
+        product.setSubTitle(registerProductDto.getSubtitle());
         product.setPrice(registerProductDto.getPrice());
         product.setStock(registerProductDto.getStock());
         product.setCount(registerProductDto.getCount());
