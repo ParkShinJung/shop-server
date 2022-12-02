@@ -79,13 +79,14 @@ public class AccountController {
         registerMemberDto.setMemberPassword(encryptedPassword);*/
         Member member = Member.builder()
                 .memberId(registerMemberDto.getMemberId())
-                .memberPassword(registerMemberDto.getMemberPassword())
-                .memberName(registerMemberDto.getMemberName())
+                .password(registerMemberDto.getPassword())
+                .name(registerMemberDto.getName())
                 .address1(registerMemberDto.getAddress1())
                 .address2(registerMemberDto.getAddress2())
                 .contact(registerMemberDto.getContact())
                 .birthday(registerMemberDto.getBirthday())
                 .accountType(registerMemberDto.getAccountType())
+                .email(registerMemberDto.getEmail())
                 .modDate(LocalDateTime.now())
                 .regDate(LocalDateTime.now())
                 .build();
@@ -115,11 +116,12 @@ public class AccountController {
                                 member -> ResponseMemberListDto.MemberItems.builder()
                                         .id(member.getId())
                                         .memberId(member.getMemberId())
-                                        .memberPassword(member.getMemberPassword())
-                                        .memberName(member.getMemberName())
+                                        .password(member.getPassword())
+                                        .name(member.getName())
                                         .address1(member.getAddress1())
                                         .address2(member.getAddress2())
                                         .contact(member.getContact())
+                                        .email(member.getEmail())
                                         .birthday(member.getBirthday())
                                         .accountType(member.getAccountType())
                                         .modDate(member.getModDate())
@@ -139,11 +141,12 @@ public class AccountController {
         return ResponseEntity.ok(ResponseMemberDto.builder()
                 .id(member.getId())
                 .memberId(member.getMemberId())
-                .memberPassword(member.getMemberPassword())
-                .memberName(member.getMemberName())
+                .password(member.getPassword())
+                .name(member.getName())
                 .address1(member.getAddress1())
                 .address2(member.getAddress2())
                 .contact(member.getContact())
+                .email(member.getEmail())
                 .accountType(member.getAccountType())
                 .birthday(member.getBirthday())
                 .modDate(member.getModDate())
@@ -157,11 +160,12 @@ public class AccountController {
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
 
         member.setMemberId(registerMemberDto.getMemberId());
-        member.setMemberPassword(registerMemberDto.getMemberPassword());
-        member.setMemberName(registerMemberDto.getMemberName());
+        member.setPassword(registerMemberDto.getPassword());
+        member.setName(registerMemberDto.getName());
         member.setAddress1(registerMemberDto.getAddress1());
         member.setAddress2(registerMemberDto.getAddress2());
         member.setContact(registerMemberDto.getContact());
+        member.setEmail(registerMemberDto.getEmail());
         member.setBirthday(registerMemberDto.getBirthday());
         member.setAccountType(registerMemberDto.getAccountType());
         member.setModDate(LocalDateTime.now());

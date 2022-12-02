@@ -27,10 +27,13 @@ public class Member {
     private String memberId;
 
     @Column
-    private String memberPassword;
+    private String email;
 
     @Column
-    private String memberName;
+    private String password;
+
+    @Column
+    private String name;
 
     @Column
     private String address1;
