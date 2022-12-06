@@ -24,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -300,5 +301,43 @@ public class ProductController {
         reviewRepository.delete(review);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getProductListByCategoryId(@PathVariable String categoryId, @Valid RequestListDto requestListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "regDateTime");
+        Page<Product> productList = productRepository.findByCategory_CategoryId(
+                categoryId,
+                pageRequest
+        );
+
+        return ResponseEntity.ok(ResponseProductListDto.builder()
+                .page(productList.getNumber())
+                .pageSize(productList.getSize())
+                .totalCount(productList.getTotalElements())
+                .productItems(
+                        productList.stream().map(
+                                product -> ResponseProductListDto.ProductItems.builder()
+                                        .productId(product.getProductId())
+                                        .title(product.getTitle())
+                                        .subtitle(product.getSubTitle())
+                                        .price(product.getPrice())
+                                        .stock(product.getStock())
+                                        .count(product.getCount())
+                                        .regDateTime(product.getRegDateTime())
+                                        .modDate(product.getModDate())
+                                        .weight(product.getWeight())
+                                        .mainImg(product.getMainImg())
+                                        .subImg(product.getSubImg())
+                                        .discountRate(product.getDiscountRate())
+                                        .discountPrice(product.getDiscountPrice())
+                                        .productStatus(product.getProductStatus())
+                                        .categoryId(product.getCategory().getCategoryId())
+                                        .categoryName(product.getCategory().getCategoryName())
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
     }
 }
