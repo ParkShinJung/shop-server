@@ -1,5 +1,6 @@
 package com.example.shop.domain.account;
 
+import com.example.shop.common.type.AccountType;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -11,12 +12,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@ToString
-@RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "member")
 public class Member {
 
@@ -28,10 +27,13 @@ public class Member {
     private String memberId;
 
     @Column
-    private String memberPassword;
+    private String email;
 
     @Column
-    private String memberName;
+    private String password;
+
+    @Column
+    private String name;
 
     @Column
     private String address1;
@@ -53,4 +55,8 @@ public class Member {
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
+
+    @Column(columnDefinition = "ENUM('USER', 'STORE_OWNER', 'ADMIN') DEFAULT 'USER'")
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType = AccountType.USER;
 }

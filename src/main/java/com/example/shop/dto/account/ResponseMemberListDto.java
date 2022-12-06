@@ -1,5 +1,6 @@
 package com.example.shop.dto.account;
 
+import com.example.shop.common.type.AccountType;
 import com.example.shop.dto.common.ResponseListDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -24,11 +25,13 @@ public class ResponseMemberListDto extends ResponseListDto {
 
         private long id;
         private String memberId;
-        private String memberPassword;
-        private String memberName;
+        private String password;
+        private String name;
         private String address1;
         private String address2;
         private String contact;
+        private String email;
+        private AccountType accountType;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         private LocalDate birthday;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

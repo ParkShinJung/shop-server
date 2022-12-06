@@ -44,8 +44,13 @@ spring:
 
 # JPA
   jpa:
+    #    show-sql: true
+    #    generate-ddl: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
 server:
   port: 18100
 
