@@ -178,7 +178,7 @@ public class ProductController {
         Product product = productRepository.findByProductId(requestRegisterReviewDto.getProductId())
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
 
-        Member member = memberRepository.findById(requestRegisterReviewDto.getMemberId())
+        Member member = memberRepository.findByMemberId(requestRegisterReviewDto.getMemberId())
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
 
         Review review = Review.builder()

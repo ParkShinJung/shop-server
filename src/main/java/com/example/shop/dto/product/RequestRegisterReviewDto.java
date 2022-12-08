@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestRegisterReviewDto {
 
-    private Long memberId;
+    private String memberId;
     private String title;
     private String content;
     private String image;
