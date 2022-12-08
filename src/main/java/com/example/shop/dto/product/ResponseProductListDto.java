@@ -33,7 +33,7 @@ public class ResponseProductListDto extends ResponseListDto {
         private String mainImg;
         private String subImg;
         private Long discountRate;
-        private Long discountPrice;
+        private Long totalPrice;
         private ProductStatus productStatus;
         private String categoryId;
         private String categoryName;

@@ -49,7 +49,7 @@ public class Product {
     private Long price;     //정가
 
     @Column
-    private Long discountPrice;     //할인적용된가격
+    private Long totalPrice;     //할인적용된가격
 
     @Column
     private Long stock;
