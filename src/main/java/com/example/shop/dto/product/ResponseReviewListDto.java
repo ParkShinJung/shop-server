@@ -27,6 +27,7 @@ public class ResponseReviewListDto extends ResponseListDto {
         private String image;
         private String productId;
         private String productName;
+        private Integer starRating;
         private LocalDateTime regDateTime;
         private LocalDateTime modDateTime;
     }

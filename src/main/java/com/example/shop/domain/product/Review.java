@@ -49,6 +49,9 @@ public class Review {
     @Column
     private String image;
 
+    @Column
+    private Integer startRating;
+
     /*    @Column
     private String shape;*/
 

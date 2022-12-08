@@ -136,7 +136,7 @@ public class ProductController {
                 .mainImg(product.getMainImg())
                 .subImg(product.getSubImg())
                 .discountRate(product.getDiscountRate())
-                .discountPrice(product.getTotalPrice())
+                .totalPrice(product.getTotalPrice())
                 .productStatus(product.getProductStatus())
                 .categoryId(product.getCategory().getCategoryId())
                 .categoryName(product.getCategory().getCategoryName())
@@ -203,6 +203,7 @@ public class ProductController {
                 .title(requestRegisterReviewDto.getTitle())
                 .content(requestRegisterReviewDto.getContent())
                 .image(requestRegisterReviewDto.getImage())
+                .startRating(requestRegisterReviewDto.getStarRating())
                 .product(product)
                 .regDateTime(LocalDateTime.now())
                 .build();
@@ -234,6 +235,7 @@ public class ProductController {
                                         .image(review.getImage())
                                         .productId(review.getProduct().getProductId())
                                         .productName(review.getProduct().getTitle())
+                                        .starRating(review.getStartRating())
                                         .regDateTime(review.getRegDateTime())
                                         .modDateTime(review.getModDateTime())
                                         .build()
@@ -242,7 +244,37 @@ public class ProductController {
                 .build());
     }
 
-    @GetMapping("/review/{productId}")
+    @GetMapping("/review/member/{memberId}")
+    public ResponseEntity<?> getReviewListByMemberId(@PathVariable String memberId, @Valid RequestListDto requestListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "regDateTime");
+        Page<Review> reviewList = reviewRepository.findAllByMember_MemberId(memberId, pageRequest);
+
+        return ResponseEntity.ok(ResponseReviewListDto.builder()
+                .page(reviewList.getNumber())
+                .pageSize(reviewList.getSize())
+                .totalCount(reviewList.getTotalElements())
+                .reviewItems(
+                        reviewList.stream().map(
+                                review -> ResponseReviewListDto.ReviewItems.builder()
+                                        .reviewId(review.getReviewId())
+                                        .memberId(review.getMember().getMemberId())
+                                        .memberName(review.getMember().getName())
+                                        .title(review.getTitle())
+                                        .content(review.getContent())
+                                        .image(review.getImage())
+                                        .productId(review.getProduct().getProductId())
+                                        .productName(review.getProduct().getTitle())
+                                        .starRating(review.getStartRating())
+                                        .regDateTime(review.getRegDateTime())
+                                        .modDateTime(review.getModDateTime())
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
+    }
+
+    @GetMapping("/review/product/{productId}")
     public ResponseEntity<?> getReviewListByProductId(@PathVariable String productId, @Valid RequestListDto requestListDto) {
 
         PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "regDateTime");
@@ -263,6 +295,7 @@ public class ProductController {
                                         .image(review.getImage())
                                         .productId(review.getProduct().getProductId())
                                         .productName(review.getProduct().getTitle())
+                                        .starRating(review.getStartRating())
                                         .regDateTime(review.getRegDateTime())
                                         .modDateTime(review.getModDateTime())
                                         .build()
@@ -286,6 +319,7 @@ public class ProductController {
                 .image(review.getImage())
                 .productId(review.getProduct().getProductId())
                 .productName(review.getProduct().getTitle())
+                .starRating(review.getStartRating())
                 .regDateTime(review.getRegDateTime())
                 .modDateTime(review.getModDateTime())
                 .build());
@@ -302,6 +336,7 @@ public class ProductController {
         review.setContent(requestUpdateReviewDto.getContent());
         review.setImage(requestUpdateReviewDto.getImage());
         review.setModDateTime(LocalDateTime.now());
+        review.setStartRating(requestUpdateReviewDto.getStarRating());
 
         reviewRepository.save(review);
 
