@@ -41,29 +41,37 @@ public class ProductController {
 
     private final CategoryRepository categoryRepository;
 
+
     @PostMapping
     public ResponseEntity<?> registerProduct(@RequestBody RequestRegisterProductDto registerProductDto) {
 
         Category category = categoryRepository.findByCategoryId(registerProductDto.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
 
+        Long totalPrice = null;
+        Double rate = registerProductDto.getDiscountRate();
+
+        if (rate == 0) {
+            totalPrice = Math.round(registerProductDto.getPrice());
+        } else {
+            totalPrice = Math.round(registerProductDto.getPrice() - (registerProductDto.getDiscountRate() / 100 * registerProductDto.getPrice()));
+        }
+
         Product product = Product.builder()
                 .title(registerProductDto.getTitle())
                 .subTitle(registerProductDto.getSubtitle())
-                .price(registerProductDto.getPrice())
+                .price(Math.round(registerProductDto.getPrice()))
                 .stock(registerProductDto.getStock())
                 .count(registerProductDto.getCount())
                 .regDateTime(LocalDateTime.now())
                 .weight(registerProductDto.getWeight())
                 .mainImg(registerProductDto.getMainImg())
                 .subImg(registerProductDto.getSubImg())
-                .discountRate(registerProductDto.getDiscountRate())
-                .discountPrice(registerProductDto.getDiscountPrice())
+                .discountRate(Math.round(registerProductDto.getDiscountRate()))
+                .totalPrice(totalPrice)
                 .productStatus(registerProductDto.getProductStatus())
                 .category(category)
                 .build();
-
-        log.info("===================>" + product);
 
         productRepository.save(product);
 
@@ -99,7 +107,7 @@ public class ProductController {
                                         .mainImg(product.getMainImg())
                                         .subImg(product.getSubImg())
                                         .discountRate(product.getDiscountRate())
-                                        .discountPrice(product.getDiscountPrice())
+                                        .totalPrice(product.getTotalPrice())
                                         .productStatus(product.getProductStatus())
                                         .categoryId(product.getCategory().getCategoryId())
                                         .categoryName(product.getCategory().getCategoryName())
@@ -128,7 +136,7 @@ public class ProductController {
                 .mainImg(product.getMainImg())
                 .subImg(product.getSubImg())
                 .discountRate(product.getDiscountRate())
-                .discountPrice(product.getDiscountPrice())
+                .discountPrice(product.getTotalPrice())
                 .productStatus(product.getProductStatus())
                 .categoryId(product.getCategory().getCategoryId())
                 .categoryName(product.getCategory().getCategoryName())
@@ -144,16 +152,25 @@ public class ProductController {
         Category category = categoryRepository.findByCategoryId(registerProductDto.getCategoryId())
                         .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
 
+        Long totalPrice = null;
+        Double rate = registerProductDto.getDiscountRate();
+
+        if (rate == 0) {
+            totalPrice = Math.round(registerProductDto.getPrice());
+        } else {
+            totalPrice = Math.round(registerProductDto.getPrice() - (registerProductDto.getDiscountRate() / 100 * registerProductDto.getPrice()));
+        }
+
         product.setTitle(registerProductDto.getTitle());
         product.setSubTitle(registerProductDto.getSubtitle());
-        product.setPrice(registerProductDto.getPrice());
+        product.setPrice(Math.round(registerProductDto.getPrice()));
         product.setStock(registerProductDto.getStock());
         product.setCount(registerProductDto.getCount());
         product.setWeight(registerProductDto.getWeight());
         product.setMainImg(registerProductDto.getMainImg());
         product.setSubImg(registerProductDto.getSubImg());
-        product.setDiscountRate(registerProductDto.getDiscountRate());
-        product.setDiscountPrice(registerProductDto.getDiscountPrice());
+        product.setDiscountRate(Math.round(registerProductDto.getDiscountRate()));
+        product.setTotalPrice(totalPrice);
         product.setProductStatus(registerProductDto.getProductStatus());
         product.setCategory(category);
 
@@ -331,7 +348,7 @@ public class ProductController {
                                         .mainImg(product.getMainImg())
                                         .subImg(product.getSubImg())
                                         .discountRate(product.getDiscountRate())
-                                        .discountPrice(product.getDiscountPrice())
+                                        .totalPrice(product.getTotalPrice())
                                         .productStatus(product.getProductStatus())
                                         .categoryId(product.getCategory().getCategoryId())
                                         .categoryName(product.getCategory().getCategoryName())
