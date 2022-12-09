@@ -2,6 +2,7 @@ package com.example.shop.dto.product;
 
 import com.example.shop.domain.account.Member;
 import com.example.shop.domain.product.Product;
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,5 @@ public class RequestRegisterReviewDto {
     private String content;
     private String image;
     private String productId;
+    private Integer starRating;
 }
