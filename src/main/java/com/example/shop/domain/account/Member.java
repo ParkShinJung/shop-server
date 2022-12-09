@@ -36,6 +36,9 @@ public class Member {
     private String name;
 
     @Column
+    private String zipCode;
+
+    @Column
     private String address1;
 
     @Column
