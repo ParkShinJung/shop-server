@@ -82,6 +82,7 @@ public class AccountController {
                 .memberId(registerMemberDto.getMemberId())
                 .password(registerMemberDto.getPassword())
                 .name(registerMemberDto.getName())
+                .zipCode(registerMemberDto.getZipCode())
                 .address1(registerMemberDto.getAddress1())
                 .address2(registerMemberDto.getAddress2())
                 .contact(registerMemberDto.getContact())
@@ -119,6 +120,7 @@ public class AccountController {
                                         .memberId(member.getMemberId())
                                         .password(member.getPassword())
                                         .name(member.getName())
+                                        .zipCode(member.getZipCode())
                                         .address1(member.getAddress1())
                                         .address2(member.getAddress2())
                                         .contact(member.getContact())
@@ -144,6 +146,7 @@ public class AccountController {
                 .memberId(member.getMemberId())
                 .password(member.getPassword())
                 .name(member.getName())
+                .zipCode(member.getZipCode())
                 .address1(member.getAddress1())
                 .address2(member.getAddress2())
                 .contact(member.getContact())
@@ -163,6 +166,7 @@ public class AccountController {
         member.setMemberId(registerMemberDto.getMemberId());
         member.setPassword(registerMemberDto.getPassword());
         member.setName(registerMemberDto.getName());
+        member.setZipCode(registerMemberDto.getZipCode());
         member.setAddress1(registerMemberDto.getAddress1());
         member.setAddress2(registerMemberDto.getAddress2());
         member.setContact(registerMemberDto.getContact());

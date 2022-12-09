@@ -27,6 +27,7 @@ public class ResponseMemberListDto extends ResponseListDto {
         private String memberId;
         private String password;
         private String name;
+        private String zipCode;
         private String address1;
         private String address2;
         private String contact;
