@@ -3,10 +3,8 @@ package com.example.shop.controller;
 import com.example.shop.common.consts.DateFormatConst;
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
-import com.example.shop.common.type.AccountType;
 import com.example.shop.domain.account.*;
 import com.example.shop.dto.account.*;
-import com.example.shop.dto.common.RequestListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +21,10 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -132,10 +133,10 @@ public class AccountController {
                 .build());
     }
 
-    @GetMapping("/member/{id}")
-    public ResponseEntity<?> getMemberDetail(@PathVariable Long id) {
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<?> getMemberDetail(@PathVariable String memberId) {
 
-        Member member = memberRepository.findById(id)
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
 
         return ResponseEntity.ok(ResponseMemberDto.builder()
@@ -154,9 +155,9 @@ public class AccountController {
                 .build());
     }
 
-    @PutMapping("/member/{id}")
-    public ResponseEntity<?> updateMemberInfo(@PathVariable Long id, @RequestBody RequestRegisterMemberDto registerMemberDto) {
-        Member member = memberRepository.findById(id)
+    @PutMapping("/member/{memberId}")
+    public ResponseEntity<?> updateMemberInfo(@PathVariable String memberId, @RequestBody RequestRegisterMemberDto registerMemberDto) {
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
 
         member.setMemberId(registerMemberDto.getMemberId());
@@ -177,9 +178,9 @@ public class AccountController {
 
     }
 
-    @DeleteMapping("/member/{id}")
-    public ResponseEntity<?> deleteMemberInfo(@PathVariable Long id) {
-        Member member = memberRepository.findById(id)
+    @DeleteMapping("/member/{memberId}")
+    public ResponseEntity<?> deleteMemberInfo(@PathVariable String memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
 
         memberRepository.delete(member);
@@ -187,7 +188,38 @@ public class AccountController {
         return ResponseEntity.noContent().build();
 
     }
+    @GetMapping("/signup/id/{memberId}")
+    public ResponseEntity<?> getDuplicateMemberId(@PathVariable String memberId) {
+        List<Member> member = memberRepository.findAll();
+        int count = 0;
+        List<String> members = new ArrayList<>();
+        Boolean result;
+        try {
+            member.forEach(aaa -> {
+                String memberIds = aaa.getMemberId();
+                members.add(memberIds);
+            });
+            count = Collections.frequency(members, memberId);
 
+            if (count == 0) {
+                result = true;
+            } else {
+                result = false;
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new Exception("잘못된 요청입니다."));
+        }
+
+/*        try {
+            memberRepository.findByMemberId(memberId);
+        } catch (DuplicateKeyException ignored) {
+            log.error("중복된 아이디입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new Exception("잘못된 요청입니다."));
+        }*/
+        return ResponseEntity.ok(result);
+    }
     private LocalDate transformDate(String sourceDate) {
         LocalDate targetDate = null;
         if (StringUtils.isNotEmpty(sourceDate)) {
