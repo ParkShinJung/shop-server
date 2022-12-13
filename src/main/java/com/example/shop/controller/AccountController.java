@@ -1,13 +1,17 @@
 package com.example.shop.controller;
 
 import com.example.shop.common.consts.DateFormatConst;
+import com.example.shop.common.consts.ErrorCodeConst;
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
 import com.example.shop.domain.account.*;
+import com.example.shop.dto.ResponseCheckAccountDto;
 import com.example.shop.dto.account.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +29,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static java.util.regex.Pattern.matches;
 
 @Slf4j
 @RestController
@@ -35,7 +42,6 @@ public class AccountController {
 
     private final CompanyRepository companyRepository;
 
-    @Autowired
     private final MemberRepository memberRepository;
 
 
@@ -224,6 +230,41 @@ public class AccountController {
         }*/
         return ResponseEntity.ok(result);
     }
+
+    @PostMapping("/checkLogin/{memberId}")
+    public ResponseEntity<?> loginChecking(@PathVariable String memberId, @RequestBody RequestLonginMemberDto requestLonginDto) {
+
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        boolean result;
+        if (requestLonginDto.getPassword().equals(member.getPassword())) {
+            result = true;
+        } else {
+            result = false;
+        }
+
+        return ResponseEntity.ok(ResponseCheckAccountDto.builder()
+                        .isAccountIdMatched(true)
+                        .isAccountPasswordMatched(result)
+                        .isAdminAccess(true)
+                        .id(member.getId())
+                        .memberId(member.getMemberId())
+                        .password(member.getPassword())
+                        .name(member.getName())
+                        .zipCode(member.getZipCode())
+                        .address1(member.getAddress1())
+                        .address2(member.getAddress2())
+                        .contact(member.getContact())
+                        .email(member.getEmail())
+                        .accountType(member.getAccountType())
+                        .birthday(member.getBirthday())
+                        .modDate(member.getModDate())
+                        .regDate(member.getRegDate())
+                .build());
+    }
+
+
     private LocalDate transformDate(String sourceDate) {
         LocalDate targetDate = null;
         if (StringUtils.isNotEmpty(sourceDate)) {

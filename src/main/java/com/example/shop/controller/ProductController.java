@@ -392,4 +392,15 @@ public class ProductController {
                 )
                 .build());
     }
+
+/*    @GetMapping("/top30")
+    public ResponseEntity<?> getTop30ProductList(@Valid RequestListDto requestListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "regDateTime");
+        Page<Product> productList = productRepository.findByCategory_CategoryId(
+                pageRequest
+        );
+
+        return ResponseEntity.ok(null);
+    }*/
 }
