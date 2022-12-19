@@ -52,10 +52,10 @@ public class Product {
     private Long totalPrice;     //할인적용된가격
 
     @Column
-    private Long stock;
+    private Long stock;     //재고
 
     @Column
-    private Long count;
+    private Long count;     //팔린개수
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
