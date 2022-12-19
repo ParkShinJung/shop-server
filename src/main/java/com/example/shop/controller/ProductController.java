@@ -25,6 +25,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.PrimitiveIterator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -393,14 +394,17 @@ public class ProductController {
                 .build());
     }
 
-/*    @GetMapping("/top30")
-    public ResponseEntity<?> getTop30ProductList(@Valid RequestListDto requestListDto) {
+    @PutMapping("/status/{productId}")
+    ResponseEntity<?> updateProductStatus(@PathVariable String productId, @RequestBody RequestUpdateStatusDto requestUpdateStatusDto) {
 
-        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "regDateTime");
-        Page<Product> productList = productRepository.findByCategory_CategoryId(
-                pageRequest
-        );
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
 
-        return ResponseEntity.ok(null);
-    }*/
+        product.setProductStatus(requestUpdateStatusDto.getProductStatus());
+
+        productRepository.save(product);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).build();
+    }
 }
