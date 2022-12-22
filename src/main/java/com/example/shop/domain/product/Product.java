@@ -1,6 +1,9 @@
 package com.example.shop.domain.product;
 
+import com.example.shop.common.type.OrderStatus;
+import com.example.shop.common.type.ProductStatus;
 import com.example.shop.common.util.StringPrefixedSequenceIdGenerator;
+import com.example.shop.domain.common.Category;
 import com.example.shop.domain.info.Notice;
 import com.example.shop.domain.info.Qna;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,9 +33,9 @@ public class Product {
             parameters = {
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
                     @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "PD"),
-                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%010d")
+                    @org.hibernate.annotations.Parameter(name = StringPrefixedSequenceIdGenerator.NUMBER_FORMAT_PARAMETER, value = "%06d")
             })
-    @Column(length = 12)
+    @Column(length = 8)
     private String productId;
 
 
@@ -40,27 +43,30 @@ public class Product {
     private String title;
 
     @Column
-    private String subtitle;
+    private String subTitle;
 
     @Column
-    private Long price;
+    private Long price;     //정가
 
     @Column
-    private Long stock;
+    private Long totalPrice;     //할인적용된가격
 
     @Column
-    private Long count;
+    private Long stock;     //재고
+
+    @Column
+    private Long count;     //팔린개수
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime regDate;
+    private LocalDateTime regDateTime;
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modDate;
 
     @Column
-    private Integer weight;
+    private String weight;
 
     @Column
     private String mainImg;
@@ -68,10 +74,19 @@ public class Product {
     @Column
     private String subImg;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+/*    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "productId")
-    private List<Notice> notices;
+    private List<Notice> notices;*/
 
     @Column
     private Long discountRate;
+
+    @Builder.Default
+    @Column(columnDefinition = "ENUM('SALE', 'SOLD_OUT', 'END') DEFAULT 'SALE'")
+    @Enumerated(EnumType.STRING)
+    private ProductStatus productStatus = ProductStatus.SALE;
+
+    @OneToOne
+    @JoinColumn(name="category_id")
+    private Category category;
 }

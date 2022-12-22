@@ -1,50 +1,42 @@
 package com.example.shop.dto.product;
 
+import com.example.shop.common.type.ProductStatus;
 import com.example.shop.dto.common.ResponseListDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
 @Data
 @SuperBuilder
+@EqualsAndHashCode(callSuper = false)
 public class ResponseProductListDto extends ResponseListDto {
-    private List<ProductListItem> productItems;
+
+    public List<ProductItems> productItems;
 
     @Data
-    @SuperBuilder
-    public static class ProductListItem {
-        private String prodId;
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ProductItems {
 
-        private String prodTitle;
+        private String productId;
+        private String title;
+        private String subtitle;
+        private Long price;
+        private Long stock;
+        private Long count;
+        private LocalDateTime regDateTime;
+        private LocalDateTime modDate;
+        private String weight;
+        private String mainImg;
+        private String subImg;
+        private Long discountRate;
+        private Long totalPrice;
+        private ProductStatus productStatus;
+        private String categoryId;
+        private String categoryName;
 
-
-        private String prodSubtitle;
-
-
-        private Integer prodPrice;
-
-
-        private Integer prodStock;
-
-
-        private Integer prodCount;
-
-
-        private Integer prodWeight;
-
-
-        private String prodMainImg;
-
-
-        private String prodSubImg;
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime prodRegDate;
     }
-
 }

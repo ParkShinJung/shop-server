@@ -1,0 +1,67 @@
+serviceName: shop
+spring:
+  profiles:
+    active: production
+
+# Database (MySQL)
+#  datasource:
+#    url: jdbc:log4jdbc:mysql://db-8hku3-kr.vpc-pub-cdb.ntruss.com:3306/data-hub?useSSL=false&autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul
+#    username: echoss
+#    password: F54h2GHn!9PdZ##F
+  datasource:
+#    url: jdbc:log4jdbc:mysql://175.106.99.241:3306/data_collector_db?useSSL=false&autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul
+#    username: data_hub_user
+#    password: echosstech
+#    url: jdbc:log4jdbc:mysql://db-8q6f6-kr.vpc-pub-cdb.ntruss.com:3306/data-hub-db?useSSL=false&autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul
+#    username: echoss
+#    password: echoss2021!
+
+#    url: jdbc:log4jdbc:mysql://175.45.200.216:3306/smart-farm-db?useSSL=false&autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul
+#    username: echoss
+#    password: echoss2022
+#    url: jdbc:log4jdbc:mysql://db-9a514-kr.vpc-pub-cdb.ntruss.com:3306/data-hub-db?useSSL=false&autoReconnect=true&autoReconnection=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Seoul
+#    username: echoss
+#    password: echoss2022!
+
+    url: jdbc:mariadb://localhost:3306/shops
+    username: sjpark
+    password: 980320
+
+#    url: jdbc:mariadb://175.45.201.217:3306/shops
+#    username: sjpark
+#    password: 980320
+
+  # MongoDB
+  data:
+    mongodb:
+#      uri: "mongodb://datahub:echoss2021!@8nji1.pub-vpc.mg.naverncp.com:17017/echoss_raw_db"
+#      uri: "mongodb://datahub:echoss2021!@8q1rn.puqqab-vpc.mg.naverncp.com:17017/echoss_raw_db"
+#      uri: "mongodb://echoss:1jWM9CuGwvkRvmvM@192.168.238.2:27017/echoss_raw_db"
+#      uri: "mongodb://echoss:1jWM9CuGwvkRvmvM@175.106.99.241:27017/echoss_raw_db"
+#      uri: "mongodb://datahub:echoss2021!@8nji1.pub-vpc.mg.naverncp.com:17017/echoss_raw_db"
+      uri: "mongodb://datahub:echoss2021!@8q7bd.pub-vpc.mg.naverncp.com:17017/echoss_raw_db"
+
+
+# JPA
+  jpa:
+    #    show-sql: true
+    #    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 18100
+
+logging:
+  level:
+    root: INFO
+    log4jdbc:
+      log4j2: OFF
+
+    org.springframework.data.mongodb.core.MongoTemplate: INFO
+
+  pattern:
+    console: "%d %highlight(%-5level) %cyan([%thread]) %yellow(%logger :) %msg%n"
+    file:

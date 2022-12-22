@@ -107,6 +107,11 @@ public class ErrorConst {
             .message("There is no Notice.")
             .build();
 
+    public static final ErrorCode NOT_FOUND_CATEGORY = ErrorCode.builder()
+            .code("708")
+            .message("There is no Category.")
+            .build();
+
 
 
     @Data

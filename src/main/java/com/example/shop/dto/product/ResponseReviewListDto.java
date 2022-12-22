@@ -1,40 +1,34 @@
 package com.example.shop.dto.product;
 
 import com.example.shop.dto.common.ResponseListDto;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
 @Data
 @SuperBuilder
+@EqualsAndHashCode(callSuper = false)
 public class ResponseReviewListDto extends ResponseListDto {
 
-    private List<ReviewListItem> reviewListItems;
+    public List<ReviewItems> reviewItems;
 
     @Data
     @Builder
-    public static class ReviewListItem {
-
-
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReviewItems {
         private String reviewId;
-
-        private String reviewWriter;
-
-        private String reviewQw;
-
-        private String reviewTitle;
-
-        private String reviewContent;
-
-        private String reviewImg;
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        private LocalDateTime reviewRegDate;
+        private String memberId;
+        private String memberName;
+        private String title;
+        private String content;
+        private String image;
+        private String productId;
+        private String productName;
+        private Integer starRating;
+        private LocalDateTime regDateTime;
+        private LocalDateTime modDateTime;
     }
 }
