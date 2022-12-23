@@ -1,6 +1,7 @@
 package com.example.shop.domain.product;
 
 import lombok.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -19,9 +20,9 @@ public class OrdersProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    @ToString.Exclude
+    @ToStringExclude
     private Product product;
 
     @Column

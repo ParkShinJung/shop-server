@@ -72,7 +72,7 @@ public class Orders {
     private String payment;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ord_id")
+    @JoinColumn(name = "ord_id", referencedColumnName = "ordId")
     @ToString.Exclude
     private List<OrdersProduct> ordersProducts;
 
