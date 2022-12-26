@@ -42,6 +42,8 @@ public class ProductController {
 
     private final CategoryRepository categoryRepository;
 
+    private final OrdersRepository ordersRepository;
+
 
     @PostMapping
     public ResponseEntity<?> registerProduct(@RequestBody RequestRegisterProductDto registerProductDto) {
@@ -406,5 +408,43 @@ public class ProductController {
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
         return ResponseEntity.created(selfLink).build();
+    }
+
+    @PostMapping("/order")
+    ResponseEntity<?> registerProductOrder(@RequestBody RequestRegisterOrderDto registerOrderDto) {
+
+        Member member = memberRepository.findMemberIdByMemberId(registerOrderDto.getMemberId())
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_MEMBER));
+
+        Orders newOrders = Orders.builder()
+                .member(member)
+                .name(registerOrderDto.getName())
+                .contact(registerOrderDto.getContact())
+                .address1(registerOrderDto.getAddress1())
+                .address2(registerOrderDto.getAddress2())
+                .zipcode(registerOrderDto.getZipcode())
+                .payment(registerOrderDto.getPayment())
+                .build();
+
+        if (registerOrderDto.getProductItem().size() > 0) {
+            List<OrdersProduct> contents = registerOrderDto.getProductItem().stream().map(
+                    content -> {
+                        Product product = productRepository.findByProductId(content.getProduct())
+                                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+                        return OrdersProduct.builder()
+                                .product(product)
+                                .amount(content.getAmount())
+                                .build();
+                    }
+            ).collect(Collectors.toList());
+
+            newOrders.setOrdersProducts(contents);
+        }
+
+        Orders orders = ordersRepository.save(newOrders);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+        return ResponseEntity.created(selfLink).build();
+
     }
 }

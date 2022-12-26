@@ -14,6 +14,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findAll(Specification<Member> memberSpecification, Pageable pageable);
 
     Optional<Member> findByMemberId(String memberId);
+    Optional<Member> findMemberIdByMemberId(String memberId);
 
     List<Member> findAll();
 
