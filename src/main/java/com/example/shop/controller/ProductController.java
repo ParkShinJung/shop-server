@@ -2,6 +2,7 @@ package com.example.shop.controller;
 
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
+import com.example.shop.common.type.OrderStatus;
 import com.example.shop.common.type.ProductStatus;
 import com.example.shop.domain.account.Member;
 import com.example.shop.domain.account.MemberRepository;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.tags.EditorAwareTag;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -153,7 +155,7 @@ public class ProductController {
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
 
         Category category = categoryRepository.findByCategoryId(registerProductDto.getCategoryId())
-                        .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
 
         Long totalPrice = null;
         Double rate = registerProductDto.getDiscountRate();
@@ -424,6 +426,8 @@ public class ProductController {
                 .address2(registerOrderDto.getAddress2())
                 .zipcode(registerOrderDto.getZipcode())
                 .payment(registerOrderDto.getPayment())
+                .orderDate(LocalDateTime.now())
+                .status(OrderStatus.order_confirmation)
                 .build();
 
         if (registerOrderDto.getProductItem().size() > 0) {
@@ -439,12 +443,54 @@ public class ProductController {
             ).collect(Collectors.toList());
 
             newOrders.setOrdersProducts(contents);
+        } else {
+            return ResponseEntity.badRequest().body(new Exception("주문할 제품이 없습니다."));
         }
 
-        Orders orders = ordersRepository.save(newOrders);
+        ordersRepository.save(newOrders);
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
         return ResponseEntity.created(selfLink).build();
+    }
 
+    @GetMapping("/order")
+    ResponseEntity<?> getOrderList(@Valid RequestOrderListDto requestListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "orderDate");
+        Page<Orders> orderList = ordersRepository.findAll(
+                OrdersSpecification.getOrdersSpecification(requestListDto),
+                pageRequest
+        );
+
+        return ResponseEntity.ok(ResponseOrderListDto.builder()
+                .page(orderList.getNumber())
+                .pageSize(orderList.getSize())
+                .totalCount(orderList.getTotalElements())
+                .ordersItemsList(
+                        orderList.stream().map(
+                                orders -> ResponseOrderListDto.OrdersItems.builder()
+                                        .ordId(orders.getOrdId())
+                                        .memberId(orders.getMember().getMemberId())
+                                        .memberName(orders.getMember().getName())
+                                        .orderDate(orders.getOrderDate())
+                                        .status(orders.getStatus())
+                                        .name(orders.getName())
+                                        .contact(orders.getContact())
+                                        .address1(orders.getAddress1())
+                                        .address2(orders.getAddress2())
+                                        .zipcode(orders.getZipcode())
+                                        .payment(orders.getPayment())
+                                        .ordersProducts(orders.getOrdersProducts().stream().map(
+                                                ordersProduct -> ResponseOrderListDto.OrdersProduct.builder()
+                                                        .id(ordersProduct.getId())
+                                                        .productId(ordersProduct.getProduct().getProductId())
+                                                        .productName(ordersProduct.getProduct().getTitle())
+                                                        .amount(ordersProduct.getAmount())
+                                                        .build()
+                                        ).collect(Collectors.toList()))
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
     }
 }

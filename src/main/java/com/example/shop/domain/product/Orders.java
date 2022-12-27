@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -43,7 +44,7 @@ public class Orders {
 
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private String orderDate;
+    private LocalDateTime orderDate;
 
     @Builder.Default
     @Column(columnDefinition = "ENUM('order_confirmation', 'in_delivery', 'order_complete', 'order_cancel') DEFAULT 'order_confirmation'")
