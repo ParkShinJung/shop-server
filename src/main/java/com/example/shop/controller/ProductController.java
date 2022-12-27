@@ -15,6 +15,7 @@ import com.example.shop.dto.common.RequestListDto;
 import com.example.shop.dto.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -493,4 +494,73 @@ public class ProductController {
                 )
                 .build());
     }
+
+    @GetMapping("/order/member/{memberId}")
+    ResponseEntity<?> getOrderListByProductId(@PathVariable String memberId, @Valid RequestOrderListDto requestOrderListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestOrderListDto.getPage(), requestOrderListDto.getPageSize(), Sort.Direction.ASC, "orderDate");
+        Page<Orders> orderList = ordersRepository.findOrdersByMember_MemberId(
+                memberId,
+                pageRequest
+        );
+
+        return ResponseEntity.ok(ResponseOrderListDto.builder()
+                .page(orderList.getNumber())
+                .pageSize(orderList.getSize())
+                .totalCount(orderList.getTotalElements())
+                .ordersItemsList(
+                        orderList.stream().map(
+                                orders -> ResponseOrderListDto.OrdersItems.builder()
+                                        .ordId(orders.getOrdId())
+                                        .memberId(orders.getMember().getMemberId())
+                                        .memberName(orders.getMember().getName())
+                                        .orderDate(orders.getOrderDate())
+                                        .status(orders.getStatus())
+                                        .name(orders.getName())
+                                        .contact(orders.getContact())
+                                        .address1(orders.getAddress1())
+                                        .address2(orders.getAddress2())
+                                        .zipcode(orders.getZipcode())
+                                        .payment(orders.getPayment())
+                                        .ordersProducts(orders.getOrdersProducts().stream().map(
+                                                ordersProduct -> ResponseOrderListDto.OrdersProduct.builder()
+                                                        .id(ordersProduct.getId())
+                                                        .productId(ordersProduct.getProduct().getProductId())
+                                                        .productName(ordersProduct.getProduct().getTitle())
+                                                        .amount(ordersProduct.getAmount())
+                                                        .build()
+                                        ).collect(Collectors.toList()))
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
+    }
+
+    @GetMapping("/order/product/{productId}")
+    ResponseEntity<?> getOrderListByProductId(@PathVariable String productId) {
+
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        List<OrdersItem> ordersList = ordersRepository.getOrdersListByProductId(product.getProductId());
+
+        return ResponseEntity.ok(ordersList);
+    }
+
+    @PutMapping("order/status/{ordId}")
+    ResponseEntity<?> updateOrderStatus(@PathVariable String ordId, @RequestBody RequestUpdateOrderStatusDto requestUpdateOrderStatusDto) {
+
+        Orders orders = ordersRepository.findByOrdId(ordId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_ORDER));
+
+        orders.setStatus(requestUpdateOrderStatusDto.getStatus());
+
+        ordersRepository.save(orders);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+
+        return ResponseEntity.created(selfLink).build();
+    }
+
+
 }
