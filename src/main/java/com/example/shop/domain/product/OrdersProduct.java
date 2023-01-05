@@ -1,5 +1,6 @@
 package com.example.shop.domain.product;
 
+import com.example.shop.common.type.YesNo;
 import lombok.*;
 import org.apache.commons.lang3.builder.ToStringExclude;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,4 +28,15 @@ public class OrdersProduct {
 
     @Column
     private Long amount;
+
+    @Column
+    private Long price;
+
+    @Column
+    private Long totalPrice;
+
+    @Builder.Default
+    @Column(columnDefinition = "ENUM('Y', 'N') default 'Y'")
+    @Enumerated(EnumType.STRING)
+    private YesNo discountOver3 = YesNo.N;
 }

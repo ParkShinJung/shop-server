@@ -3,32 +3,28 @@ package com.example.shop.controller;
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
 import com.example.shop.common.type.OrderStatus;
-import com.example.shop.common.type.ProductStatus;
+import com.example.shop.common.type.YesNo;
 import com.example.shop.domain.account.Member;
 import com.example.shop.domain.account.MemberRepository;
 import com.example.shop.domain.common.Category;
 import com.example.shop.domain.common.CategoryRepository;
-import com.example.shop.domain.info.Qna;
-import com.example.shop.domain.info.QnaSpecification;
 import com.example.shop.domain.product.*;
 import com.example.shop.dto.common.RequestListDto;
 import com.example.shop.dto.product.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.rsocket.context.RSocketPortInfoApplicationContextInitializer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.servlet.tags.EditorAwareTag;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.PrimitiveIterator;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -426,7 +422,7 @@ public class ProductController {
                 .address1(registerOrderDto.getAddress1())
                 .address2(registerOrderDto.getAddress2())
                 .zipcode(registerOrderDto.getZipcode())
-                .payment(registerOrderDto.getPayment())
+                .totalPayment(registerOrderDto.getTotalPayment())
                 .orderDate(LocalDateTime.now())
                 .status(OrderStatus.order_confirmation)
                 .build();
@@ -436,9 +432,23 @@ public class ProductController {
                     content -> {
                         Product product = productRepository.findByProductId(content.getProduct())
                                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+/*                        YesNo yesNo;
+                        double saleTotalPrice = 0;
+                        if (content.getAmount() > 2) {
+                            yesNo = YesNo.Y;
+                            saleTotalPrice = content.getTotalPrice() * 0.95;
+                        } else {
+                            yesNo = YesNo.N;
+                            saleTotalPrice = content.getTotalPrice();
+                        }*/
+
                         return OrdersProduct.builder()
                                 .product(product)
                                 .amount(content.getAmount())
+                                .price(content.getPrice())
+                                .totalPrice(content.getTotalPrice())
+                                .discountOver3(content.getDiscountOver3())
                                 .build();
                     }
             ).collect(Collectors.toList());
@@ -480,13 +490,16 @@ public class ProductController {
                                         .address1(orders.getAddress1())
                                         .address2(orders.getAddress2())
                                         .zipcode(orders.getZipcode())
-                                        .payment(orders.getPayment())
+                                        .totalPayment(orders.getTotalPayment())
                                         .ordersProducts(orders.getOrdersProducts().stream().map(
                                                 ordersProduct -> ResponseOrderListDto.OrdersProduct.builder()
                                                         .id(ordersProduct.getId())
                                                         .productId(ordersProduct.getProduct().getProductId())
                                                         .productName(ordersProduct.getProduct().getTitle())
                                                         .amount(ordersProduct.getAmount())
+                                                        .price(ordersProduct.getPrice())
+                                                        .totalPrice(ordersProduct.getTotalPrice())
+                                                        .discountOver3(ordersProduct.getDiscountOver3())
                                                         .build()
                                         ).collect(Collectors.toList()))
                                         .build()
@@ -521,13 +534,17 @@ public class ProductController {
                                         .address1(orders.getAddress1())
                                         .address2(orders.getAddress2())
                                         .zipcode(orders.getZipcode())
-                                        .payment(orders.getPayment())
+                                        .totalPayment(orders.getTotalPayment())
                                         .ordersProducts(orders.getOrdersProducts().stream().map(
-                                                ordersProduct -> ResponseOrderListDto.OrdersProduct.builder()
+                                                ordersProduct ->
+                                                        ResponseOrderListDto.OrdersProduct.builder()
                                                         .id(ordersProduct.getId())
                                                         .productId(ordersProduct.getProduct().getProductId())
                                                         .productName(ordersProduct.getProduct().getTitle())
                                                         .amount(ordersProduct.getAmount())
+                                                        .price(ordersProduct.getPrice())
+                                                        .totalPrice(ordersProduct.getTotalPrice())
+                                                        .discountOver3(ordersProduct.getDiscountOver3())
                                                         .build()
                                         ).collect(Collectors.toList()))
                                         .build()
@@ -547,7 +564,7 @@ public class ProductController {
         return ResponseEntity.ok(ordersList);
     }
 
-    @PutMapping("order/status/{ordId}")
+    @PutMapping("/order/status/{ordId}")
     ResponseEntity<?> updateOrderStatus(@PathVariable String ordId, @RequestBody RequestUpdateOrderStatusDto requestUpdateOrderStatusDto) {
 
         Orders orders = ordersRepository.findByOrdId(ordId)
@@ -561,6 +578,5 @@ public class ProductController {
 
         return ResponseEntity.created(selfLink).build();
     }
-
 
 }

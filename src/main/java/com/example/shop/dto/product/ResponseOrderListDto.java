@@ -1,6 +1,7 @@
 package com.example.shop.dto.product;
 
 import com.example.shop.common.type.OrderStatus;
+import com.example.shop.common.type.YesNo;
 import com.example.shop.domain.product.OrdersProduct;
 import com.example.shop.domain.product.Product;
 import com.example.shop.dto.common.ResponseListDto;
@@ -35,7 +36,7 @@ public class ResponseOrderListDto extends ResponseListDto {
         private String address1;
         private String address2;
         private String zipcode;
-        private String payment;
+        private Long totalPayment;
         private List<OrdersProduct> ordersProducts;
     }
 
@@ -48,5 +49,8 @@ public class ResponseOrderListDto extends ResponseListDto {
         private String productId;
         private String productName;
         private Long amount;
+        private Long price;
+        private Long totalPrice;
+        private YesNo discountOver3;
     }
 }

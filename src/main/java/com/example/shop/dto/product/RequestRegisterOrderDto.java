@@ -1,5 +1,6 @@
 package com.example.shop.dto.product;
 
+import com.example.shop.common.type.YesNo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class RequestRegisterOrderDto {
     private String address1;
     private String address2;
     private String zipcode;
-    private String payment;
+    private Long totalPayment;
 
     private List<ProductItems> productItem;
 
@@ -30,5 +31,8 @@ public class RequestRegisterOrderDto {
     public static class ProductItems {
         private String product;
         private Long amount;
+        private Long price;
+        private Long totalPrice;
+        private YesNo discountOver3;
     }
 }
