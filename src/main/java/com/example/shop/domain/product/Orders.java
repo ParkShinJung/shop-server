@@ -70,7 +70,7 @@ public class Orders {
 //    private String amount;
 
     @Column
-    private String payment;
+    private Long totalPayment;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "ord_id", referencedColumnName = "ordId")
