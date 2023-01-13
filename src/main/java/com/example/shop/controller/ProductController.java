@@ -2,13 +2,12 @@ package com.example.shop.controller;
 
 import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.common.exception.NotFoundException;
-import com.example.shop.common.type.ProductStatus;
+import com.example.shop.common.type.OrderStatus;
+import com.example.shop.common.type.YesNo;
 import com.example.shop.domain.account.Member;
 import com.example.shop.domain.account.MemberRepository;
 import com.example.shop.domain.common.Category;
 import com.example.shop.domain.common.CategoryRepository;
-import com.example.shop.domain.info.Qna;
-import com.example.shop.domain.info.QnaSpecification;
 import com.example.shop.domain.product.*;
 import com.example.shop.dto.common.RequestListDto;
 import com.example.shop.dto.product.*;
@@ -25,7 +24,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.PrimitiveIterator;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -153,7 +152,7 @@ public class ProductController {
                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
 
         Category category = categoryRepository.findByCategoryId(registerProductDto.getCategoryId())
-                        .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_CATEGORY));
 
         Long totalPrice = null;
         Double rate = registerProductDto.getDiscountRate();
@@ -423,7 +422,9 @@ public class ProductController {
                 .address1(registerOrderDto.getAddress1())
                 .address2(registerOrderDto.getAddress2())
                 .zipcode(registerOrderDto.getZipcode())
-                .payment(registerOrderDto.getPayment())
+                .totalPayment(registerOrderDto.getTotalPayment())
+                .orderDate(LocalDateTime.now())
+                .status(OrderStatus.order_confirmation)
                 .build();
 
         if (registerOrderDto.getProductItem().size() > 0) {
@@ -431,20 +432,151 @@ public class ProductController {
                     content -> {
                         Product product = productRepository.findByProductId(content.getProduct())
                                 .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+/*                        YesNo yesNo;
+                        double saleTotalPrice = 0;
+                        if (content.getAmount() > 2) {
+                            yesNo = YesNo.Y;
+                            saleTotalPrice = content.getTotalPrice() * 0.95;
+                        } else {
+                            yesNo = YesNo.N;
+                            saleTotalPrice = content.getTotalPrice();
+                        }*/
+
                         return OrdersProduct.builder()
                                 .product(product)
                                 .amount(content.getAmount())
+                                .price(content.getPrice())
+                                .totalPrice(content.getTotalPrice())
+                                .discountOver3(content.getDiscountOver3())
                                 .build();
                     }
             ).collect(Collectors.toList());
 
             newOrders.setOrdersProducts(contents);
+        } else {
+            return ResponseEntity.badRequest().body(new Exception("주문할 제품이 없습니다."));
         }
 
-        Orders orders = ordersRepository.save(newOrders);
+        ordersRepository.save(newOrders);
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
         return ResponseEntity.created(selfLink).build();
-
     }
+
+    @GetMapping("/order")
+    ResponseEntity<?> getOrderList(@Valid RequestOrderListDto requestListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestListDto.getPage(), requestListDto.getPageSize(), Sort.Direction.ASC, "orderDate");
+        Page<Orders> orderList = ordersRepository.findAll(
+                OrdersSpecification.getOrdersSpecification(requestListDto),
+                pageRequest
+        );
+
+        return ResponseEntity.ok(ResponseOrderListDto.builder()
+                .page(orderList.getNumber())
+                .pageSize(orderList.getSize())
+                .totalCount(orderList.getTotalElements())
+                .ordersItemsList(
+                        orderList.stream().map(
+                                orders -> ResponseOrderListDto.OrdersItems.builder()
+                                        .ordId(orders.getOrdId())
+                                        .memberId(orders.getMember().getMemberId())
+                                        .memberName(orders.getMember().getName())
+                                        .orderDate(orders.getOrderDate())
+                                        .status(orders.getStatus())
+                                        .name(orders.getName())
+                                        .contact(orders.getContact())
+                                        .address1(orders.getAddress1())
+                                        .address2(orders.getAddress2())
+                                        .zipcode(orders.getZipcode())
+                                        .totalPayment(orders.getTotalPayment())
+                                        .ordersProducts(orders.getOrdersProducts().stream().map(
+                                                ordersProduct -> ResponseOrderListDto.OrdersProduct.builder()
+                                                        .id(ordersProduct.getId())
+                                                        .productId(ordersProduct.getProduct().getProductId())
+                                                        .productName(ordersProduct.getProduct().getTitle())
+                                                        .amount(ordersProduct.getAmount())
+                                                        .price(ordersProduct.getPrice())
+                                                        .totalPrice(ordersProduct.getTotalPrice())
+                                                        .discountOver3(ordersProduct.getDiscountOver3())
+                                                        .build()
+                                        ).collect(Collectors.toList()))
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
+    }
+
+    @GetMapping("/order/member/{memberId}")
+    ResponseEntity<?> getOrderListByProductId(@PathVariable String memberId, @Valid RequestOrderListDto requestOrderListDto) {
+
+        PageRequest pageRequest = PageRequest.of(requestOrderListDto.getPage(), requestOrderListDto.getPageSize(), Sort.Direction.ASC, "orderDate");
+        Page<Orders> orderList = ordersRepository.findOrdersByMember_MemberId(
+                memberId,
+                pageRequest
+        );
+
+        return ResponseEntity.ok(ResponseOrderListDto.builder()
+                .page(orderList.getNumber())
+                .pageSize(orderList.getSize())
+                .totalCount(orderList.getTotalElements())
+                .ordersItemsList(
+                        orderList.stream().map(
+                                orders -> ResponseOrderListDto.OrdersItems.builder()
+                                        .ordId(orders.getOrdId())
+                                        .memberId(orders.getMember().getMemberId())
+                                        .memberName(orders.getMember().getName())
+                                        .orderDate(orders.getOrderDate())
+                                        .status(orders.getStatus())
+                                        .name(orders.getName())
+                                        .contact(orders.getContact())
+                                        .address1(orders.getAddress1())
+                                        .address2(orders.getAddress2())
+                                        .zipcode(orders.getZipcode())
+                                        .totalPayment(orders.getTotalPayment())
+                                        .ordersProducts(orders.getOrdersProducts().stream().map(
+                                                ordersProduct ->
+                                                        ResponseOrderListDto.OrdersProduct.builder()
+                                                        .id(ordersProduct.getId())
+                                                        .productId(ordersProduct.getProduct().getProductId())
+                                                        .productName(ordersProduct.getProduct().getTitle())
+                                                        .amount(ordersProduct.getAmount())
+                                                        .price(ordersProduct.getPrice())
+                                                        .totalPrice(ordersProduct.getTotalPrice())
+                                                        .discountOver3(ordersProduct.getDiscountOver3())
+                                                        .build()
+                                        ).collect(Collectors.toList()))
+                                        .build()
+                        ).collect(Collectors.toList())
+                )
+                .build());
+    }
+
+    @GetMapping("/order/product/{productId}")
+    ResponseEntity<?> getOrderListByProductId(@PathVariable String productId) {
+
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_PRODUCT));
+
+        List<OrdersItem> ordersList = ordersRepository.getOrdersListByProductId(product.getProductId());
+
+        return ResponseEntity.ok(ordersList);
+    }
+
+    @PutMapping("/order/status/{ordId}")
+    ResponseEntity<?> updateOrderStatus(@PathVariable String ordId, @RequestBody RequestUpdateOrderStatusDto requestUpdateOrderStatusDto) {
+
+        Orders orders = ordersRepository.findByOrdId(ordId)
+                .orElseThrow(() -> new NotFoundException(ErrorConst.NOT_FOUND_ORDER));
+
+        orders.setStatus(requestUpdateOrderStatusDto.getStatus());
+
+        ordersRepository.save(orders);
+
+        URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequestUri().toUriString());
+
+        return ResponseEntity.created(selfLink).build();
+    }
+
 }
