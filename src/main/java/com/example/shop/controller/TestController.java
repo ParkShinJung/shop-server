@@ -4,7 +4,6 @@ import com.example.shop.common.consts.ErrorConst;
 import com.example.shop.domain.Tests;
 import com.example.shop.domain.TestsRepository;
 import com.example.shop.dto.RequestRegisterBoardDto;
-import com.example.shop.dto.common.ResponseSavedIdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import javassist.NotFoundException;
@@ -39,10 +38,6 @@ public class TestController {
                         .build());
 
         URI selfLink = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-        return ResponseEntity.created(selfLink).body(
-                ResponseSavedIdDto.builder()
-                        .savedId(String.valueOf(savedTests))
-                        .build()
-        );
+        return ResponseEntity.created(selfLink).body(null);
     }
 }
